@@ -1,0 +1,5 @@
+venv
+src/json
+src/.vscode
+.DS_Store
+src/.DS_Store
