@@ -97,8 +97,38 @@ class Data():
         else:
             print("There are no saved teams to delete.")
 
+class Pokemon():
+    move_list = [None, None, None, None]
+
+    def __init__(self, response):
+        self.id = "None"
+        self.name = "None"
+        self.types = ()
+        self.weight = "None"
+        self.height = "None"
+        self.abilities = {}
+
+    def view_pokemon(self):
+        print(f"Team: {team_controller.current_team.name}")
+        print(f"Slot #{team_choice}\n")
+        print(f"Name: {self.name}")
+        print(f"Pokedex ID: {self.id}\n")
+        print(f"Height: {self.height} decimeters")
+        print(f"Weight: {self.weight} kilograms\n")
+        if len(self.types) == 2:
+            print(f"Types: {self.types[0]}")
+            print(f"         {self.types[1]}")
+        elif len(self.types) == 1:
+            print(f"Type: {self.types[0]}")
+        else:
+            print(f"Type: None")
+        print("")
+        print(f"Abilities: ") # Fix this later
+        print("")
+        print(f"Current Move Set:")
+
 class Team():
-    pokemon_list = [None, None, None, None, None, None]
+    pokemon_list = [Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None)]
 
     def __init__(self, name):
         self.name = name
@@ -112,19 +142,42 @@ class Team():
             else:
                 print("    Empty\n")
 
-class Pokemon():
-    move_list = [None, None, None, None]
+    def team_menu(self):
+        team_options = [
+            {
+                "type": "list",
+                "name": "team_menu",
+                "message": "What would you like to do with this team?",
+                "choices": [
+                    "Edit team",
+                    "Save team",
+                    "Back to main menu"
+                ]
+            }
+        ]
 
-    def __init__(self, response):
-        self.id = None
-        self.name = None
-        self.types = ()
-        self.weight = None
-        self.height = None
-        self.abilities = {}
+        if prompt(team_options)["team_menu"] == "Edit team":
+            select_team_pokemon = [
+                {
+                    "type": "list",
+                    "name": "select_team_pokemon",
+                    "message": "Which Pokemon slot would you like to change?",
+                    "choices": [
+                        "Slot 1 - " + (self.pokemon_list[0].name if self.pokemon_list[0] != None else "Empty"),
+                        "Slot 2 - " + (self.pokemon_list[1].name if self.pokemon_list[1] != None else "Empty"),
+                        "Slot 3 - " + (self.pokemon_list[2].name if self.pokemon_list[2] != None else "Empty"),
+                        "Slot 4 - " + (self.pokemon_list[3].name if self.pokemon_list[3] != None else "Empty"),
+                        "Slot 5 - " + (self.pokemon_list[4].name if self.pokemon_list[4] != None else "Empty"),
+                        "Slot 6 - " + (self.pokemon_list[5].name if self.pokemon_list[5] != None else "Empty")
+                    ]
+                }
+            ]
 
-    def view_pokemon(self):
-        pass
+            return prompt(select_team_pokemon)["select_team_pokemon"][5]
+        else:
+            return prompt(team_options)["team_menu"]
+
+
 
 class APIHandler():
     api_url = "https://pokeapi.co/api/v2/"
@@ -147,5 +200,14 @@ while True:
     if choice == "Create a new team":
         team_controller.new_team()
         team_controller.current_team.view_team()
+        team_choice = team_controller.current_team.team_menu()
+        print(team_choice)
+        if team_choice == "Save team":
+            print("Save team here")
+        elif team_choice == "Back to main menu":
+            print("Back to main menu here")
+        else:
+            team_controller.current_team.pokemon_list[int(team_choice) - 1].view_pokemon()
+
     else:
         exit()
