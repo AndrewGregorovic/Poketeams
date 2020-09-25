@@ -1,17 +1,24 @@
 import requests
 import json
 from PyInquirer import prompt, Separator
+import os
+from copy import deepcopy
 
 # Additional feature if time, have offline mode to only view saved teams
 class Data():
-    team_data_path = "json/team_data.json"
+    team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/team_data.json"
     current_team = None
 
     def __init__(self):
         try:
-            with open(team_data_path, "r") as f:
+            os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "/json")
+        except FileExistsError:
+            pass
+
+        try:
+            with open(self.team_data_path, "r") as f:
                 self.team_data = json.loads(f.read())
-        except:
+        except FileNotFoundError:
             self.team_data = []
 
     def convert_to_objects(self):
@@ -60,16 +67,14 @@ class Data():
 
         self.current_team = Team(prompt(new_team_name)["new_team_name"])
         
-        # Additional functionality, warn if name is already used 
-
-    def list_saved_teams(self):
+    def get_saved_teams(self):
         print("Currently saved teams:")
         for team in self.team_data:
             print(f" - {team[team_name]}")
 
     def select_saved_team(self):
         if self.team_data != []:
-            self.list_saved_teams()
+            self.get_saved_teams()
             self.current_team = input("Which team would you like to select?: ")
         else:
             print("There are no saved teams.")
@@ -80,7 +85,7 @@ class Data():
     def delete_saved_team(self):
         if self.team_data != []:
             while True:
-                self.list_saved_teams()
+                self.get_saved_teams()
                 while True:
                     delete_team = input("Which team would you like to delete?: ")
                     if delete_team not in [team[team_name] for team in self.team_data]:
@@ -97,21 +102,35 @@ class Data():
         else:
             print("There are no saved teams to delete.")
 
+    def save_all_teams(self):
+        # save to json file
+        if self.team_data != []:
+            json_team_data = json.dumps(self.team_data, default=lambda o: o.__dict__)
+            with open(self.team_data_path, "w") as f:
+                json_string = json.dumps(json_team_data)
+                f.write(json_string)
+
 class Move():
 
     def __init__(self, response):
         self.name = "None"
+        self.accuracy = "None"
+        self.power = "None"
+        self.pp = "None"
+        self.type = ("None")
+        self.effect_chance = "None"
+        self.effect = "None"
 
 class Pokemon():
-    move_list = [Move(None), Move(None), Move(None), Move(None)]
 
     def __init__(self, response):
         self.id = "None"
         self.name = "None"
-        self.types = ()
+        self.types = ("None")
         self.weight = "None"
         self.height = "None"
-        self.abilities = {}
+        self.abilities = {"Ability 1": "None"}
+        self.move_list = [Move(None), Move(None), Move(None), Move(None)]
 
     def view_pokemon(self):
         print(f"Team: {team_controller.current_team.name}")
@@ -168,10 +187,10 @@ class Pokemon():
             return pokemon_option
 
 class Team():
-    pokemon_list = [Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None)]
 
     def __init__(self, name):
         self.name = name
+        self.pokemon_list = [Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None)]
 
     def view_team(self):
         print(f"Team: {self.name}\n")
@@ -219,7 +238,17 @@ class Team():
         else:
             return team_option
 
-
+    def team_save(self):
+        # add/update team_controller.team_data attribute
+        if team_controller.team_data != []:
+            for team in team_controller.team_data:
+                if team.name == current_team.name:
+                    team = current_team
+                    return
+            
+            team_controller.team_data.append(current_team)
+        else:
+            team_controller.team_data.append(current_team)
 
 class APIHandler():
     api_url = "https://pokeapi.co/api/v2/"
@@ -242,22 +271,26 @@ while True:
     if choice == "Create a new team":
         team_controller.new_team()
         current_team = team_controller.current_team
-        current_team.view_team()
-        team_choice = current_team.team_menu()
-        print(team_choice)
-        if team_choice == "Save team":
-            print("Save team here")
-        elif team_choice == "Back to main menu":
-            print("Back to main menu here")
-        else:
-            current_pokemon = current_team.pokemon_list[team_choice]
-            current_pokemon.view_pokemon()
-            pokemon_choice = current_pokemon.pokemon_menu()
-            if pokemon_choice == "Change Pokemon":
-                print("Pokemon selection here")
-            elif pokemon_choice == "Back to team view":
-                print("Back to team view here")
+        while True:
+            current_team.view_team()
+            team_choice = current_team.team_menu()
+            if team_choice == "Save team":
+                current_team.team_save()
+                team_controller.save_all_teams()
+            elif team_choice == "Back to main menu":
+                current_team.team_save()
+                team_controller.save_all_teams()
+                break
             else:
-                print("View move here")
+                current_pokemon = current_team.pokemon_list[team_choice]
+                current_pokemon.view_pokemon()
+                pokemon_choice = current_pokemon.pokemon_menu()
+                if pokemon_choice == "Change Pokemon":
+                    print("Pokemon selection here")
+                elif pokemon_choice == "Back to team view":
+                    print("Back to team view here")
+                else:
+                    print("View move here")
     else:
+        team_controller.save_all_teams()
         exit()
