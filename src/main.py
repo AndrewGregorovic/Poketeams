@@ -97,8 +97,13 @@ class Data():
         else:
             print("There are no saved teams to delete.")
 
+class Move():
+
+    def __init__(self, response):
+        self.name = "None"
+
 class Pokemon():
-    move_list = [None, None, None, None]
+    move_list = [Move(None), Move(None), Move(None), Move(None)]
 
     def __init__(self, response):
         self.id = "None"
@@ -110,7 +115,7 @@ class Pokemon():
 
     def view_pokemon(self):
         print(f"Team: {team_controller.current_team.name}")
-        print(f"Slot #{team_choice}\n")
+        print(f"Slot #{team_choice + 1}\n")
         print(f"Name: {self.name}")
         print(f"Pokedex ID: {self.id}\n")
         print(f"Height: {self.height} decimeters")
@@ -126,6 +131,41 @@ class Pokemon():
         print(f"Abilities: ") # Fix this later
         print("")
         print(f"Current Move Set:")
+
+    def pokemon_menu(self):
+        pokemon_options = [
+            {
+                "type": "list",
+                "name": "pokemon_menu",
+                "message": "What would you like to do with this pokemon slot?",
+                "choices": [
+                    "Change Pokemon",
+                    "Change moves",
+                    "Back to team view"
+                ]
+            }
+        ]
+
+        pokemon_option = prompt(pokemon_options)["pokemon_menu"]
+
+        if pokemon_option == "Change moves":
+            select_pokemon_move = [
+                {
+                    "type": "list",
+                    "name": "select_pokemon_move",
+                    "message": "Which move slot would you like to change?",
+                    "choices": [
+                        "Slot 1 - " + (self.move_list[0].name if self.move_list[0] != None else "Empty"),
+                        "Slot 2 - " + (self.move_list[1].name if self.move_list[1] != None else "Empty"),
+                        "Slot 3 - " + (self.move_list[2].name if self.move_list[2] != None else "Empty"),
+                        "Slot 4 - " + (self.move_list[3].name if self.move_list[3] != None else "Empty")
+                    ]
+                }
+            ]
+
+            return int(prompt(select_pokemon_move)["select_pokemon_move"][5]) - 1
+        else:
+            return pokemon_option
 
 class Team():
     pokemon_list = [Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None)]
@@ -156,7 +196,9 @@ class Team():
             }
         ]
 
-        if prompt(team_options)["team_menu"] == "Edit team":
+        team_option = prompt(team_options)["team_menu"]
+
+        if team_option == "Edit team":
             select_team_pokemon = [
                 {
                     "type": "list",
@@ -173,9 +215,9 @@ class Team():
                 }
             ]
 
-            return prompt(select_team_pokemon)["select_team_pokemon"][5]
+            return int(prompt(select_team_pokemon)["select_team_pokemon"][5]) - 1
         else:
-            return prompt(team_options)["team_menu"]
+            return team_option
 
 
 
@@ -199,15 +241,23 @@ while True:
     choice = team_controller.main_menu_select()
     if choice == "Create a new team":
         team_controller.new_team()
-        team_controller.current_team.view_team()
-        team_choice = team_controller.current_team.team_menu()
+        current_team = team_controller.current_team
+        current_team.view_team()
+        team_choice = current_team.team_menu()
         print(team_choice)
         if team_choice == "Save team":
             print("Save team here")
         elif team_choice == "Back to main menu":
             print("Back to main menu here")
         else:
-            team_controller.current_team.pokemon_list[int(team_choice) - 1].view_pokemon()
-
+            current_pokemon = current_team.pokemon_list[team_choice]
+            current_pokemon.view_pokemon()
+            pokemon_choice = current_pokemon.pokemon_menu()
+            if pokemon_choice == "Change Pokemon":
+                print("Pokemon selection here")
+            elif pokemon_choice == "Back to team view":
+                print("Back to team view here")
+            else:
+                print("View move here")
     else:
         exit()
