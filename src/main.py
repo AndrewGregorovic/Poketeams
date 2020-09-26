@@ -36,13 +36,17 @@ while True:
         exit()
 
     current_team = team_controller.current_team
-    is_saved = False
+    is_saved = (None, "")
     while current_team is not None:
         clear()
         current_team.view_team()
-        if is_saved is True:
+        if is_saved[0] is True:
             print(f"\n{current_team.name} has been saved!\n")
-            is_saved = not is_saved
+            is_saved = (None, "")
+        elif is_saved[0] is False:
+            print(f"\nUnable to save {current_team.name}!")
+            print(f"{is_saved[1]}\n")
+            is_saved = (None, "")
         team_choice = current_team.team_menu()
         if team_choice == "Save team":
             team_controller.team_data = current_team.team_save(

@@ -4,6 +4,7 @@ import os
 from team import Team
 from pokemon import Pokemon
 from move import Move
+import sys
 
 
 # Additional feature if time, have offline mode to only view saved teams
@@ -125,14 +126,17 @@ class Data():
 
     def save_all_teams(self):
         # save to json file
-        if self.team_data != []:
-            json_team_data = json.dumps(self.team_data,
-                                        default=lambda o: o.__dict__)
-            with open(self.team_data_path, "w") as f:
-                json_string = json.dumps(json_team_data)
-                f.write(json_string)
-        else:
-            with open(self.team_data_path, "w") as f:
-                pass
+        try:
+            if self.team_data != []:
+                json_team_data = json.dumps(self.team_data,
+                                            default=lambda o: o.__dict__)
+                with open(self.team_data_path, "w") as f:
+                    json_string = json.dumps(json_team_data)
+                    f.write(json_string)
+            else:
+                with open(self.team_data_path, "w") as f:
+                    pass
 
-        return True
+            return (True, "")
+        except Exception as e:
+            return (False, e)

@@ -22,8 +22,8 @@ class Pokemon():
                    data["height"], data["abilities"], data["move_list"], moves)
 
     def view_pokemon(self, team_name, team_choice):
-        print(f"Team: {team_name}")
-        print(f"Slot #{team_choice + 1}\n")
+        print(f"Team: {team_name}\n")
+        print(f"Slot #{team_choice + 1}\n\n")
         print(f"Name: {self.name}")
         print(f"Pokedex ID: {self.id}\n")
         print(f"Height: {self.height} decimetres")
@@ -32,11 +32,34 @@ class Pokemon():
             print(f"Types: {self.types[0]}")
             print(f"         {self.types[1]}")
         else:
-            print(f"Type: {self.types[0]}")
+            print(f"Type: {self.types}")
         print("")
-        print("Abilities: ")  # Fix this later
+        print("Abilities:")
+        for ability in self.abilities:
+            print(f"  - {ability}:")
+            print(f"      {self.abilities[ability]}")  # Fix this later
         print("")
         print("Current Move Set:")
+        print(f"  - {self.move_set[0].name}")
+        print(f"  - {self.move_set[1].name}")
+        print(f"  - {self.move_set[2].name}")
+        print(f"  - {self.move_set[3].name}")
+        print("\n")
+
+    def get_pokemon_options(self):
+        options = [
+                    "Change Pokemon",
+                    None,
+                    "Back to team view"
+        ]
+
+        if self.name == "None":
+            options[1] = {"name": "Change moves",
+                          "disabled": "Cannot change moves on an empty pokemon slot"}
+        else:
+            options[1] = "Change moves"
+
+        return options
 
     def pokemon_menu(self):
         pokemon_options = [
@@ -44,11 +67,7 @@ class Pokemon():
                 "type": "list",
                 "name": "pokemon_menu",
                 "message": "What would you like to do with this pokemon slot?",
-                "choices": [
-                    "Change Pokemon",
-                    "Change moves",
-                    "Back to team view"
-                ]
+                "choices": self.get_pokemon_options()
             }
         ]
 
@@ -81,3 +100,12 @@ class Pokemon():
                 prompt(select_pokemon_move)["select_pokemon_move"][5]) - 1
         else:
             return pokemon_option
+
+    def select_pokemon(self):
+        pass
+
+    def view_pokemon_list(self):
+        pass
+
+    def search_pokemon(self):
+        pass
