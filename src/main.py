@@ -4,133 +4,38 @@ from PyInquirer import prompt, Separator
 import os
 from copy import deepcopy
 
-# Additional feature if time, have offline mode to only view saved teams
-class Data():
-    team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/team_data.json"
-    current_team = None
-
-    def __init__(self):
-        try:
-            os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "/json")
-        except FileExistsError:
-            pass
-
-        try:
-            with open(self.team_data_path, "r") as f:
-                self.team_data = json.loads(f.read())
-        except FileNotFoundError:
-            self.team_data = []
-
-    def convert_to_objects(self):
-        pass
-
-    def get_main_menu_options(self):
-        options = [
-            "Create a new team",
-            None,
-            None,
-            Separator(),
-            "Quit"
-        ]
-
-        if self.team_data == []:
-            options[1] = { "name": "Select a saved team", "disabled": "No saved teams" }
-            options[2] = { "name": "Delete a saved team", "disabled": "No saved teams" }
-        else:
-            options[1] = "Select a saved team"
-            options[2] = "Delete a saved team"
-        
-        return options
-
-    def main_menu_select(self):
-        main_menu_options = [
-            {
-                "type": "list",
-                "name": "main_menu_option",
-                "message": "What would you like to do?",
-                "choices": self.get_main_menu_options()
-            }
-        ]
-
-        return prompt(main_menu_options)["main_menu_option"]
-
-    def new_team(self):
-        new_team_name = [
-            {
-                "type": "input",
-                "name": "new_team_name",
-                "message": "What would you like to name this new team?:",
-                "default": "New Team",
-                "validate": lambda val: val not in [team.name for team in self.team_data] or "Name already in use, please delete the team first to be able to use this name again"
-            }
-        ]
-
-        self.current_team = Team(prompt(new_team_name)["new_team_name"])
-        
-    def get_saved_teams(self):
-        print("Currently saved teams:")
-        for team in self.team_data:
-            print(f" - {team[team_name]}")
-
-    def select_saved_team(self):
-        if self.team_data != []:
-            self.get_saved_teams()
-            self.current_team = input("Which team would you like to select?: ")
-        else:
-            print("There are no saved teams.")
-            list_ask_new = input("Would you like to create a new team?: ")
-            if list_ask_new in ("y", "yes"):
-                self.new_team()
-
-    def delete_saved_team(self):
-        if self.team_data != []:
-            while True:
-                self.get_saved_teams()
-                while True:
-                    delete_team = input("Which team would you like to delete?: ")
-                    if delete_team not in [team[team_name] for team in self.team_data]:
-                        print("Unable to find a team named {delete_team}, please check that the name has been spelt correctly.")
-                    else:
-                        break
-                for team in self.team_data:
-                    if team[team_name] == delete_team:
-                        self.team_data.remove(team)
-                        print(f"{delete_team} has been deleted.")
-                delete_another = input("Would you like to delete another team?: ")
-                if delete_another not in ("y", "yes"):
-                    break
-        else:
-            print("There are no saved teams to delete.")
-
-    def save_all_teams(self):
-        # save to json file
-        if self.team_data != []:
-            json_team_data = json.dumps(self.team_data, default=lambda o: o.__dict__)
-            with open(self.team_data_path, "w") as f:
-                json_string = json.dumps(json_team_data)
-                f.write(json_string)
 
 class Move():
 
-    def __init__(self, response):
+    def __init__(self, name, accuracy, power, pp, types, effect_chance, effect):
         self.name = "None"
         self.accuracy = "None"
         self.power = "None"
         self.pp = "None"
-        self.type = ("None")
+        self.types = ("None")
         self.effect_chance = "None"
         self.effect = "None"
 
+    @classmethod
+    def from_json(cls, data):
+        return cls(**data)
+
 class Pokemon():
 
-    def __init__(self, response):
+    def __init__(self, id, name, types, weight, height, abilities, move_list, move_set):
         self.id = "None"
         self.name = "None"
         self.types = ("None")
         self.weight = "None"
         self.height = "None"
         self.abilities = {"Ability 1": "None"}
-        self.move_list = [Move(None), Move(None), Move(None), Move(None)]
+        self.move_list = "None"
+        self.move_set = move_set
+
+    @classmethod
+    def from_json(cls, data):
+        moves = list(map(Move.from_json, data["move_set"]))
+        return cls(data["id"], data["name"], data["types"], data["weight"], data["height"], data["abilities"], data["move_list"], moves)
 
     def view_pokemon(self):
         print(f"Team: {team_controller.current_team.name}")
@@ -174,10 +79,10 @@ class Pokemon():
                     "name": "select_pokemon_move",
                     "message": "Which move slot would you like to change?",
                     "choices": [
-                        "Slot 1 - " + (self.move_list[0].name if self.move_list[0] != None else "Empty"),
-                        "Slot 2 - " + (self.move_list[1].name if self.move_list[1] != None else "Empty"),
-                        "Slot 3 - " + (self.move_list[2].name if self.move_list[2] != None else "Empty"),
-                        "Slot 4 - " + (self.move_list[3].name if self.move_list[3] != None else "Empty")
+                        "Slot 1 - " + (self.move_set[0].name if self.move_set[0] != None else "Empty"),
+                        "Slot 2 - " + (self.move_set[1].name if self.move_set[1] != None else "Empty"),
+                        "Slot 3 - " + (self.move_set[2].name if self.move_set[2] != None else "Empty"),
+                        "Slot 4 - " + (self.move_set[3].name if self.move_set[3] != None else "Empty")
                     ]
                 }
             ]
@@ -188,9 +93,14 @@ class Pokemon():
 
 class Team():
 
-    def __init__(self, name):
+    def __init__(self, name, pokemon_list):
         self.name = name
-        self.pokemon_list = [Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None), Pokemon(None)]
+        self.pokemon_list = pokemon_list
+
+    @classmethod
+    def from_json(cls, data):
+        pokemon = list(map(Pokemon.from_json, data["pokemon_list"]))
+        return cls(data["name"], pokemon)
 
     def view_team(self):
         print(f"Team: {self.name}\n")
@@ -261,6 +171,119 @@ class APIHandler():
         request_url = api_url + "move/" + name
         return json.loads(requests.get(request_url).text)
 
+# Additional feature if time, have offline mode to only view saved teams
+class Data():
+    team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/team_data.json"
+    current_team = None
+    default_move = ["None", "None", "None", "None", "None", "None", "None"]
+    default_pokemon = ["None", "None", "None", "None", "None", "None", "None", [Move(*default_move), Move(*default_move), Move(*default_move), Move(*default_move)]]
+    default_pokemon_list = [Pokemon(*default_pokemon), Pokemon(*default_pokemon), Pokemon(*default_pokemon), Pokemon(*default_pokemon), Pokemon(*default_pokemon), Pokemon(*default_pokemon)]
+
+    def __init__(self):
+        try:
+            os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "/json")
+        except FileExistsError:
+            pass
+
+        try:
+            with open(self.team_data_path, "r") as f:
+                json_data = json.loads(f.readline())
+                self.team_data = self.convert_to_objects(json.loads(json_data))
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            self.team_data = []
+
+    def convert_to_objects(self, json_data):
+        converted_data = []
+        for team in json_data:
+            converted_data.append(Team.from_json(team))
+            
+        return converted_data
+
+    def get_main_menu_options(self):
+        options = [
+            "Create a new team",
+            None,
+            None,
+            Separator(),
+            "Quit"
+        ]
+
+        if self.team_data == []:
+            options[1] = { "name": "Load a saved team", "disabled": "No saved teams" }
+            options[2] = { "name": "Delete a saved team", "disabled": "No saved teams" }
+        else:
+            options[1] = "Load a saved team"
+            options[2] = "Delete a saved team"
+        
+        return options
+
+    def main_menu_select(self):
+        main_menu_options = [
+            {
+                "type": "list",
+                "name": "main_menu_option",
+                "message": "What would you like to do?",
+                "choices": self.get_main_menu_options()
+            }
+        ]
+
+        return prompt(main_menu_options)["main_menu_option"]
+
+    def new_team(self):
+        new_team_name = [
+            {
+                "type": "input",
+                "name": "new_team_name",
+                "message": "What would you like to name this new team?:",
+                "default": "New Team",
+                "validate": lambda val: val not in [team.name for team in self.team_data] or "Name already in use, please delete the team first to be able to use this name again"
+            }
+        ]
+
+        self.current_team = Team(prompt(new_team_name)["new_team_name"], self.default_pokemon_list)
+
+    def select_saved_team(self):
+        saved_team_choice = [
+            {
+                "type": "list",
+                "name": "saved_team_choice",
+                "message": "Which saved team would you like to select?",
+                "choices": [team.name for team in self.team_data]
+            }
+        ]
+
+        return prompt(saved_team_choice)["saved_team_choice"]
+
+    def load_saved_team(self):
+
+        selected_team = self.select_saved_team()
+
+        for team in self.team_data:
+            if team.name == selected_team:
+                self.current_team = team
+
+    def delete_saved_team(self):
+        
+        selected_team = self.select_saved_team()
+
+        for team in self.team_data:
+            if team.name == selected_team:
+                self.team_data.remove(team)
+                print(f"{selected_team} has been deleted.")
+                self.current_team = None
+
+    def save_all_teams(self):
+        # save to json file
+        if self.team_data != []:
+            json_team_data = json.dumps(self.team_data, default=lambda o: o.__dict__)
+            with open(self.team_data_path, "w") as f:
+                json_string = json.dumps(json_team_data)
+                f.write(json_string)
+        else:
+            with open(self.team_data_path, "w") as f:
+                pass
+
+
 
 print("Poketeams")
 print("Build your pokemon dream teams")
@@ -270,27 +293,33 @@ while True:
     choice = team_controller.main_menu_select()
     if choice == "Create a new team":
         team_controller.new_team()
-        current_team = team_controller.current_team
-        while True:
-            current_team.view_team()
-            team_choice = current_team.team_menu()
-            if team_choice == "Save team":
-                current_team.team_save()
-                team_controller.save_all_teams()
-            elif team_choice == "Back to main menu":
-                current_team.team_save()
-                team_controller.save_all_teams()
-                break
-            else:
-                current_pokemon = current_team.pokemon_list[team_choice]
-                current_pokemon.view_pokemon()
-                pokemon_choice = current_pokemon.pokemon_menu()
-                if pokemon_choice == "Change Pokemon":
-                    print("Pokemon selection here")
-                elif pokemon_choice == "Back to team view":
-                    print("Back to team view here")
-                else:
-                    print("View move here")
+    elif choice == "Load a saved team":
+        team_controller.load_saved_team()
+    elif choice == "Delete a saved team":
+        team_controller.delete_saved_team()
+        team_controller.save_all_teams()
     else:
         team_controller.save_all_teams()
         exit()
+
+    current_team = team_controller.current_team
+    while current_team != None:
+        current_team.view_team()
+        team_choice = current_team.team_menu()
+        if team_choice == "Save team":
+            current_team.team_save()
+            team_controller.save_all_teams()
+        elif team_choice == "Back to main menu":
+            current_team.team_save()
+            team_controller.save_all_teams()
+            break
+        else:
+            current_pokemon = current_team.pokemon_list[team_choice]
+            current_pokemon.view_pokemon()
+            pokemon_choice = current_pokemon.pokemon_menu()
+            if pokemon_choice == "Change Pokemon":
+                print("Pokemon selection here")
+            elif pokemon_choice == "Back to team view":
+                print("Back to team view here")
+            else:
+                print("View move here")
