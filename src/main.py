@@ -1,4 +1,5 @@
 import requests
+import requests_cache
 import json
 from PyInquirer import prompt, Separator
 import os
@@ -164,11 +165,11 @@ class APIHandler():
     api_url = "https://pokeapi.co/api/v2/"
 
     def get_pokemon(self, name, query_string = ""):
-        request_url = api_url + "pokemon/" + name + query_string
+        request_url = self.api_url + "pokemon/" + name + query_string
         return json.loads(requests.get(request_url).text)
 
     def get_move(self, name):
-        request_url = api_url + "move/" + name
+        request_url = self.api_url + "move/" + name
         return json.loads(requests.get(request_url).text)
 
 # Additional feature if time, have offline mode to only view saved teams
@@ -196,7 +197,7 @@ class Data():
         converted_data = []
         for team in json_data:
             converted_data.append(Team.from_json(team))
-            
+
         return converted_data
 
     def get_main_menu_options(self):
@@ -230,13 +231,14 @@ class Data():
         return prompt(main_menu_options)["main_menu_option"]
 
     def new_team(self):
+
         new_team_name = [
             {
                 "type": "input",
                 "name": "new_team_name",
                 "message": "What would you like to name this new team?:",
                 "default": "New Team",
-                "validate": lambda val: val not in [team.name for team in self.team_data] or "Name already in use, please delete the team first to be able to use this name again"
+                "validate": lambda val: val.strip(" ") not in [team.name for team in self.team_data] + [""] or "Invalid name or there is another team already using this name"
             }
         ]
 
@@ -287,8 +289,10 @@ class Data():
 
 print("Poketeams")
 print("Build your pokemon dream teams")
+requests_cache.install_cache('pokeapi_cache')
 api_handler = APIHandler()
 team_controller = Data()
+
 while True:
     choice = team_controller.main_menu_select()
     if choice == "Create a new team":

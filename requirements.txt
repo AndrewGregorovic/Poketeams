@@ -6,6 +6,7 @@ Pygments==2.7.1
 PyInquirer==1.0.3
 regex==2020.7.14
 requests==2.24.0
+requests-cache==0.5.2
 six==1.15.0
 urllib3==1.25.10
 wcwidth==0.2.5
