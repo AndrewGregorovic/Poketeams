@@ -1,6 +1,7 @@
 class Move():
 
-    def __init__(self, name, accuracy, power, pp, types, effect_chance, effect):
+    def __init__(self, name, accuracy, power, pp,
+                 types, effect_chance, effect):
         self.name = "None"
         self.accuracy = "None"
         self.power = "None"

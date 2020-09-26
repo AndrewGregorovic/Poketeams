@@ -4,6 +4,7 @@ from data import Data
 from apihandler import APIHandler
 import art
 
+
 def clear():
     if os.name == "nt":
         command = "cls"
@@ -11,6 +12,7 @@ def clear():
         command = "clear"
 
     os.system(command)
+
 
 requests_cache.install_cache('pokeapi_cache')
 api_handler = APIHandler()
@@ -35,18 +37,20 @@ while True:
 
     current_team = team_controller.current_team
     is_saved = False
-    while current_team != None:
+    while current_team is not None:
         clear()
         current_team.view_team()
-        if is_saved == True:
+        if is_saved is True:
             print(f"\n{current_team.name} has been saved!\n")
             is_saved = not is_saved
         team_choice = current_team.team_menu()
         if team_choice == "Save team":
-            team_controller.team_data = current_team.team_save(team_controller.team_data)
+            team_controller.team_data = current_team.team_save(
+                                        team_controller.team_data)
             is_saved = team_controller.save_all_teams()
         elif team_choice == "Back to main menu":
-            team_controller.team_data = current_team.team_save(team_controller.team_data)
+            team_controller.team_data = current_team.team_save(
+                                        team_controller.team_data)
             team_controller.save_all_teams()
             break
         else:

@@ -1,5 +1,6 @@
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt
 from pokemon import Pokemon
+
 
 class Team():
 
@@ -44,21 +45,35 @@ class Team():
                     "name": "select_team_pokemon",
                     "message": "Which Pokemon slot would you like to change?",
                     "choices": [
-                        "Slot 1 - " + (self.pokemon_list[0].name if self.pokemon_list[0].name != "None" else "Empty"),
-                        "Slot 2 - " + (self.pokemon_list[1].name if self.pokemon_list[1].name != "None" else "Empty"),
-                        "Slot 3 - " + (self.pokemon_list[2].name if self.pokemon_list[2].name != "None" else "Empty"),
-                        "Slot 4 - " + (self.pokemon_list[3].name if self.pokemon_list[3].name != "None" else "Empty"),
-                        "Slot 5 - " + (self.pokemon_list[4].name if self.pokemon_list[4].name != "None" else "Empty"),
-                        "Slot 6 - " + (self.pokemon_list[5].name if self.pokemon_list[5].name != "None" else "Empty")
+                        "Slot 1 - " + (self.pokemon_list[0].name
+                                       if self.pokemon_list[0].name != "None"
+                                       else "Empty"),
+                        "Slot 2 - " + (self.pokemon_list[1].name
+                                       if self.pokemon_list[1].name != "None"
+                                       else "Empty"),
+                        "Slot 3 - " + (self.pokemon_list[2].name
+                                       if self.pokemon_list[2].name != "None"
+                                       else "Empty"),
+                        "Slot 4 - " + (self.pokemon_list[3].name
+                                       if self.pokemon_list[3].name != "None"
+                                       else "Empty"),
+                        "Slot 5 - " + (self.pokemon_list[4].name
+                                       if self.pokemon_list[4].name != "None"
+                                       else "Empty"),
+                        "Slot 6 - " + (self.pokemon_list[5].name
+                                       if self.pokemon_list[5].name != "None"
+                                       else "Empty")
                     ]
                 }
             ]
 
-            return int(prompt(select_team_pokemon)["select_team_pokemon"][5]) - 1
+            return int(
+                prompt(select_team_pokemon)["select_team_pokemon"][5]) - 1
         else:
             return team_option
 
-    # saving a new team works but need to check that team correctly updates with new data
+# saving a new team works but need to check
+# that team correctly updates with new data
     def team_save(self, team_data):
         # add/update team_controller.team_data attribute
         if team_data != []:
@@ -66,7 +81,7 @@ class Team():
                 if team.name == self.name:
                     team = self
                     return team_data
-            
+
             team_data.append(self)
         else:
             team_data.append(self)

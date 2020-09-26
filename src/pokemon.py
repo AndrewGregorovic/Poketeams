@@ -1,9 +1,11 @@
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt
 from move import Move
+
 
 class Pokemon():
 
-    def __init__(self, id, name, types, weight, height, abilities, move_list, move_set):
+    def __init__(self, id, name, types, weight, height,
+                 abilities, move_list, move_set):
         self.id = "None"
         self.name = "None"
         self.types = ("None")
@@ -16,7 +18,8 @@ class Pokemon():
     @classmethod
     def from_json(cls, data):
         moves = list(map(Move.from_json, data["move_set"]))
-        return cls(data["id"], data["name"], data["types"], data["weight"], data["height"], data["abilities"], data["move_list"], moves)
+        return cls(data["id"], data["name"], data["types"], data["weight"],
+                   data["height"], data["abilities"], data["move_list"], moves)
 
     def view_pokemon(self, team_name, team_choice):
         print(f"Team: {team_name}")
@@ -28,14 +31,12 @@ class Pokemon():
         if len(self.types) == 2:
             print(f"Types: {self.types[0]}")
             print(f"         {self.types[1]}")
-        elif len(self.types) == 1:
-            print(f"Type: {self.types[0]}")
         else:
-            print(f"Type: None")
+            print(f"Type: {self.types[0]}")
         print("")
-        print(f"Abilities: ") # Fix this later
+        print("Abilities: ")  # Fix this later
         print("")
-        print(f"Current Move Set:")
+        print("Current Move Set:")
 
     def pokemon_menu(self):
         pokemon_options = [
@@ -60,14 +61,23 @@ class Pokemon():
                     "name": "select_pokemon_move",
                     "message": "Which move slot would you like to change?",
                     "choices": [
-                        "Slot 1 - " + (self.move_set[0].name if self.move_set[0].name != "None" else "Empty"),
-                        "Slot 2 - " + (self.move_set[1].name if self.move_set[1].name != "None"else "Empty"),
-                        "Slot 3 - " + (self.move_set[2].name if self.move_set[2].name != "None" else "Empty"),
-                        "Slot 4 - " + (self.move_set[3].name if self.move_set[3].name != "None" else "Empty")
+                        "Slot 1 - " + (self.move_set[0].name
+                                       if self.move_set[0].name != "None"
+                                       else "Empty"),
+                        "Slot 2 - " + (self.move_set[1].name
+                                       if self.move_set[1].name != "None"
+                                       else "Empty"),
+                        "Slot 3 - " + (self.move_set[2].name
+                                       if self.move_set[2].name != "None"
+                                       else "Empty"),
+                        "Slot 4 - " + (self.move_set[3].name
+                                       if self.move_set[3].name != "None"
+                                       else "Empty")
                     ]
                 }
             ]
 
-            return int(prompt(select_pokemon_move)["select_pokemon_move"][5]) - 1
+            return int(
+                prompt(select_pokemon_move)["select_pokemon_move"][5]) - 1
         else:
             return pokemon_option
