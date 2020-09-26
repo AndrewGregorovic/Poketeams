@@ -1,4 +1,5 @@
 from PyInquirer import prompt, Separator
+from pokemon import Pokemon
 
 class Team():
 
@@ -43,12 +44,12 @@ class Team():
                     "name": "select_team_pokemon",
                     "message": "Which Pokemon slot would you like to change?",
                     "choices": [
-                        "Slot 1 - " + (self.pokemon_list[0].name if self.pokemon_list[0] != None else "Empty"),
-                        "Slot 2 - " + (self.pokemon_list[1].name if self.pokemon_list[1] != None else "Empty"),
-                        "Slot 3 - " + (self.pokemon_list[2].name if self.pokemon_list[2] != None else "Empty"),
-                        "Slot 4 - " + (self.pokemon_list[3].name if self.pokemon_list[3] != None else "Empty"),
-                        "Slot 5 - " + (self.pokemon_list[4].name if self.pokemon_list[4] != None else "Empty"),
-                        "Slot 6 - " + (self.pokemon_list[5].name if self.pokemon_list[5] != None else "Empty")
+                        "Slot 1 - " + (self.pokemon_list[0].name if self.pokemon_list[0].name != "None" else "Empty"),
+                        "Slot 2 - " + (self.pokemon_list[1].name if self.pokemon_list[1].name != "None" else "Empty"),
+                        "Slot 3 - " + (self.pokemon_list[2].name if self.pokemon_list[2].name != "None" else "Empty"),
+                        "Slot 4 - " + (self.pokemon_list[3].name if self.pokemon_list[3].name != "None" else "Empty"),
+                        "Slot 5 - " + (self.pokemon_list[4].name if self.pokemon_list[4].name != "None" else "Empty"),
+                        "Slot 6 - " + (self.pokemon_list[5].name if self.pokemon_list[5].name != "None" else "Empty")
                     ]
                 }
             ]

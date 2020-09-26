@@ -1,4 +1,5 @@
 from PyInquirer import prompt, Separator
+from move import Move
 
 class Pokemon():
 
@@ -22,8 +23,8 @@ class Pokemon():
         print(f"Slot #{team_choice + 1}\n")
         print(f"Name: {self.name}")
         print(f"Pokedex ID: {self.id}\n")
-        print(f"Height: {self.height} decimeters")
-        print(f"Weight: {self.weight} kilograms\n")
+        print(f"Height: {self.height} decimetres")
+        print(f"Weight: {self.weight} hectograms\n")
         if len(self.types) == 2:
             print(f"Types: {self.types[0]}")
             print(f"         {self.types[1]}")
@@ -59,10 +60,10 @@ class Pokemon():
                     "name": "select_pokemon_move",
                     "message": "Which move slot would you like to change?",
                     "choices": [
-                        "Slot 1 - " + (self.move_set[0].name if self.move_set[0] != None else "Empty"),
-                        "Slot 2 - " + (self.move_set[1].name if self.move_set[1] != None else "Empty"),
-                        "Slot 3 - " + (self.move_set[2].name if self.move_set[2] != None else "Empty"),
-                        "Slot 4 - " + (self.move_set[3].name if self.move_set[3] != None else "Empty")
+                        "Slot 1 - " + (self.move_set[0].name if self.move_set[0].name != "None" else "Empty"),
+                        "Slot 2 - " + (self.move_set[1].name if self.move_set[1].name != "None"else "Empty"),
+                        "Slot 3 - " + (self.move_set[2].name if self.move_set[2].name != "None" else "Empty"),
+                        "Slot 4 - " + (self.move_set[3].name if self.move_set[3].name != "None" else "Empty")
                     ]
                 }
             ]

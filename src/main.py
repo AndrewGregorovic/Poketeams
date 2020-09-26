@@ -1,15 +1,25 @@
+import os
 import requests_cache
 from data import Data
 from apihandler import APIHandler
+import art
 
+def clear():
+    if os.name == "nt":
+        command = "cls"
+    else:
+        command = "clear"
 
-print("Poketeams")
-print("Build your pokemon dream teams")
+    os.system(command)
+
 requests_cache.install_cache('pokeapi_cache')
 api_handler = APIHandler()
 team_controller = Data()
 
 while True:
+    clear()
+    print(art.text2art("Poketeams"))
+    print("Build the ultimate pokemon teams\n\n")
     choice = team_controller.main_menu_select()
     if choice == "Create a new team":
         team_controller.new_team()
@@ -20,20 +30,27 @@ while True:
         team_controller.save_all_teams()
     else:
         team_controller.save_all_teams()
+        clear()
         exit()
 
     current_team = team_controller.current_team
+    is_saved = False
     while current_team != None:
+        clear()
         current_team.view_team()
+        if is_saved == True:
+            print(f"\n{current_team.name} has been saved!\n")
+            is_saved = not is_saved
         team_choice = current_team.team_menu()
         if team_choice == "Save team":
             team_controller.team_data = current_team.team_save(team_controller.team_data)
-            team_controller.save_all_teams()
+            is_saved = team_controller.save_all_teams()
         elif team_choice == "Back to main menu":
             team_controller.team_data = current_team.team_save(team_controller.team_data)
             team_controller.save_all_teams()
             break
         else:
+            clear()
             current_pokemon = current_team.pokemon_list[team_choice]
             current_pokemon.view_pokemon(current_team.name, team_choice)
             pokemon_choice = current_pokemon.pokemon_menu()

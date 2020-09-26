@@ -72,7 +72,7 @@ class Data():
                 "name": "new_team_name",
                 "message": "What would you like to name this new team?:",
                 "default": "New Team",
-                "validate": lambda val: val.strip(" ") not in [team.name for team in self.team_data] + [""] or "Invalid name. Must contain at least 1 character and not be in use by a currently saved team."
+                "validate": lambda val: val.strip(" ") not in [team.name for team in self.team_data] + [""] or "Invalid name. Must contain at least 1 non-space character and not be in use by a currently saved team."
             }
         ]
 
@@ -118,3 +118,5 @@ class Data():
         else:
             with open(self.team_data_path, "w") as f:
                 pass
+
+        return True
