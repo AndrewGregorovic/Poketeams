@@ -4,3 +4,4 @@ src/.vscode
 .DS_Store
 src/.DS_Store
 pokeapi_cache.sqlite
+src/__pycache__
