@@ -10,13 +10,16 @@ from apihandler import APIHandler
 
 
 class TestAPIHandlerClass(unittest.TestCase):
+    def setUp(self):
+        pass
+    
     def test_api_url(self):
         pass
 
     def test_get_single_pokemon(self):
         pass
 
-    def test_get_pokemon_with_querystring(self):
+    def test_get_pokemon_with_query_string(self):
         pass
 
     def test_get_move(self):

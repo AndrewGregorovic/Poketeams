@@ -10,5 +10,8 @@ from move import Move
 
 
 class TestMoveClass(unittest.TestCase):
+    def setUp(self):
+        pass
+    
     def test_new_move_instance(self):
         pass

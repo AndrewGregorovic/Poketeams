@@ -39,7 +39,7 @@ class Data():
         try:
             with open(self.team_data_path, "r") as f:
                 json_data = json.loads(f.readline())
-                self.team_data = self.convert_to_objects(json.loads(json_data))
+                self.team_data = self.convert_to_objects(json_data)
         except (FileNotFoundError, json.decoder.JSONDecodeError):
             self.team_data = []
 
@@ -139,8 +139,7 @@ class Data():
                 json_team_data = json.dumps(self.team_data,
                                             default=lambda o: o.__dict__)
                 with open(self.team_data_path, "w") as f:
-                    json_string = json.dumps(json_team_data)
-                    f.write(json_string)
+                    f.write(json_team_data)
             else:
                 with open(self.team_data_path, "w") as f:
                     pass

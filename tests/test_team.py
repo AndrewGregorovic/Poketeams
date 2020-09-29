@@ -10,8 +10,14 @@ from team import Team
 
 
 class TestTeamClass(unittest.TestCase):
+    def setUp(self):
+        pass
+    
     def test_new_team_instance(self):
         pass
 
-    def test_save_team_data(self):
+    def test_save_new_team_data(self):
+        pass
+
+    def test_save_updated_team_data(self):
         pass

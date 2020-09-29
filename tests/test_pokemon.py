@@ -10,6 +10,9 @@ from pokemon import Pokemon
 
 
 class TestPokemonClass(unittest.TestCase):
+    def setUp(self):
+        pass
+    
     def test_new_pokemon_instance(self):
         pass
 
