@@ -13,3 +13,15 @@ class Move():
     @classmethod
     def from_json(cls, data):
         return cls(**data)
+
+    def view_move(self):
+        pass
+
+    def move_menu(self):
+        pass
+
+    def select_move(self):
+        pass
+
+    def confirm_move(self):
+        pass

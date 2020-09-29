@@ -1,8 +1,11 @@
 import os
-import requests_cache
-from data import Data
-from apihandler import APIHandler
+
 import art
+import requests
+import requests_cache
+
+from apihandler import APIHandler
+from data import Data
 
 
 def clear():
@@ -16,7 +19,15 @@ def clear():
 
 requests_cache.install_cache('pokeapi_cache')
 api_handler = APIHandler()
-team_controller = Data()
+team_controller = Data("main")
+
+# __name__ ==
+# add -help flag
+# Additional feature if time, have offline mode to only view saved teams
+# try/except to catch error with no internet connection
+# if/else to check response status code
+# with requests_cache.disabled():
+    # requests.get("https://pokeapi.co/api/v2/")
 
 while True:
     clear()
@@ -58,13 +69,46 @@ while True:
             team_controller.save_all_teams()
             break
         else:
-            clear()
             current_pokemon = current_team.pokemon_list[team_choice]
-            current_pokemon.view_pokemon(current_team.name, team_choice)
-            pokemon_choice = current_pokemon.pokemon_menu()
-            if pokemon_choice == "Change Pokemon":
-                print("Pokemon selection here")
-            elif pokemon_choice == "Back to team view":
-                print("Back to team view here")
-            else:
-                print("View move here")
+            while True:
+                clear()
+                current_pokemon.view_pokemon(current_team.name, team_choice)
+                pokemon_choice = current_pokemon.pokemon_menu()
+                if pokemon_choice == "Change Pokemon":
+                    pass
+                    # pokemon_lists = ()
+                    # view_list = ""
+                    # while True:
+                        # if view_list in pokemon_lists:
+                            # current_pokemon.view_pokemon_list(view_list)
+                            # view_list = ""
+                        # view_list = current_pokemon.select_pokemon()
+                        # if view_list not in pokemon_lists:
+                            # r = apihandler.get_pokemon(view_list)
+                            # new_pokemon = Pokemon(response data)
+                            # new_pokemon.view_pokemon()
+                            # confirm_pokemon = new_pokemon.confirm_pokemon()
+                            # if confirm_pokemon is True:
+                                # current_pokemon = new_pokemon
+                                # current_team.pokemon_list[team_choice] = new_pokemon
+                                # break
+                            # else:
+                                # view_list = ""               
+                elif pokemon_choice == "Back to team view":
+                    break
+                else:
+                    current_move = current_pokemon.move_set[pokemon_choice]
+                    # current_move.view_move()
+                    # move_choice =  current_move.move_menu()
+                    # if move_choice = "Change move":
+                        # while True:
+                            # current_pokemon.view_move_list()
+                            # search_move = current_move.select_move()
+                            # r = apihandler.get_move(search_move)
+                            # new_move = Move(respone data)
+                            # new_move.view_move()
+                            # confirm_move = new_move.confirm_move()
+                            # if confirm_move is True:
+                                # current_move = new_move
+                                # current_pokemon.move_set[pokemon_choice] = new_move
+                                # break

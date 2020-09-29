@@ -1,16 +1,16 @@
 import json
-from PyInquirer import prompt, Separator
 import os
-from team import Team
-from pokemon import Pokemon
-from move import Move
 import sys
 
+from PyInquirer import prompt, Separator
 
-# Additional feature if time, have offline mode to only view saved teams
+from move import Move
+from pokemon import Pokemon
+from team import Team
+
+
 class Data():
-    team_data_path = os.path.dirname(
-                        os.path.abspath(__file__)) + "/json/team_data.json"
+    
     current_team = None
     default_move = ["None", "None", "None", "None", "None", "None", "None"]
     default_pokemon = ["None", "None", "None", "None", "None", "None", "None",
@@ -23,7 +23,14 @@ class Data():
                             Pokemon(*default_pokemon),
                             Pokemon(*default_pokemon)]
 
-    def __init__(self):
+    def __init__(self, name):
+        if name == "test":
+            self.team_data_path = os.path.dirname(
+                        os.path.abspath(__file__)) + "/json/test_data.json"
+        else:
+            self.team_data_path = os.path.dirname(
+                        os.path.abspath(__file__)) + "/json/team_data.json"
+
         try:
             os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "/json")
         except FileExistsError:
@@ -113,7 +120,8 @@ class Data():
         for team in self.team_data:
             if team.name == selected_team:
                 self.current_team = team
-
+                return
+        
     def delete_saved_team(self):
 
         selected_team = self.select_saved_team()

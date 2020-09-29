@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 
 class APIHandler():
@@ -11,4 +12,8 @@ class APIHandler():
 
     def get_move(self, name):
         request_url = self.api_url + "move/" + name
+        return json.loads(requests.get(request_url).text)
+
+    def get_ability(self, name):
+        request_url = self.api_url + "ability/" + name
         return json.loads(requests.get(request_url).text)

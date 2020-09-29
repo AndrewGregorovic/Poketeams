@@ -1,4 +1,5 @@
 from PyInquirer import prompt
+
 from move import Move
 
 
@@ -36,8 +37,9 @@ class Pokemon():
         print("")
         print("Abilities:")
         for ability in self.abilities:
+            # need to do api calls to pull ability effect info
             print(f"  - {ability}:")
-            print(f"      {self.abilities[ability]}")  # Fix this later
+            print(f"      {self.abilities[ability]}")
         print("")
         print("Current Move Set:")
         print(f"  - {self.move_set[0].name}")
@@ -108,4 +110,10 @@ class Pokemon():
         pass
 
     def search_pokemon(self):
+        pass
+
+    def confirm_pokemon(self):
+        pass
+
+    def view_move_list(self):
         pass
