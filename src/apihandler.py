@@ -8,12 +8,12 @@ class APIHandler():
 
     def get_pokemon(self, name, query_string=""):
         request_url = self.api_url + "pokemon/" + name + query_string
-        return json.loads(requests.get(request_url).text)
+        return requests.get(request_url)
 
     def get_move(self, name):
         request_url = self.api_url + "move/" + name
-        return json.loads(requests.get(request_url).text)
+        return requests.get(request_url)
 
     def get_ability(self, name):
         request_url = self.api_url + "ability/" + name
-        return json.loads(requests.get(request_url).text)
+        return requests.get(request_url)

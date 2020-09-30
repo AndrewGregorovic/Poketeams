@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 
 from PyInquirer import prompt, Separator
 
@@ -10,10 +9,10 @@ from team import Team
 
 
 class Data():
-    
+
     current_team = None
     default_move = ["None", "None", "None", "None", "None", "None", "None"]
-    default_pokemon = ["None", "None", "None", "None", "None", "None", "None",
+    default_pokemon = ["None", "None", ("None",), "None", "None", {"None": "None"}, [],
                        [Move(*default_move), Move(*default_move),
                         Move(*default_move), Move(*default_move)]]
     default_pokemon_list = [Pokemon(*default_pokemon),
@@ -121,7 +120,7 @@ class Data():
             if team.name == selected_team:
                 self.current_team = team
                 return
-        
+
     def delete_saved_team(self):
 
         selected_team = self.select_saved_team()
