@@ -33,6 +33,6 @@ jobs:
           port: 22
           script: |
             rm -rf poketeams
-            git clone git@github.com:AndrewGregorovic/Poketeams.git
+            git clone https://github.com/AndrewGregorovic/Poketeams.git
             python3.8 -m venv /home/app-deploy/poketeams/venv
             /home/app-deploy/poketeams/venv/bin/pip3.8 install -r /home/app-deploy/poketeams/requirements.txt
