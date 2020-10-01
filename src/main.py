@@ -10,7 +10,7 @@ import requests_cache  # type: ignore
 from apihandler import APIHandler
 from data import Data
 from pokemon import Pokemon
-# from team import Team
+from team import Team
 # import json
 
 
@@ -23,14 +23,21 @@ def clear():
     os.system(command)
 
 
-def main_online():
+def main(mode, message=""):
     while True:
         clear()
         print(art.text2art("Poketeams"))
-        print("Build the ultimate pokemon teams\n\n")
-        choice = team_controller.main_menu_select()
+        print("Build the ultimate Pokémon teams\n\n")
+        if message:
+            print(message)
+            print("\nStarting Pokéteams in offline mode.\n")
+            print("You will only be able to view, delete and rename saved teams while offline.")
+            print("Please check your internet connection and restart the app to get full functionality.\n\n")
+        team_controller = Data("main")
+        choice = team_controller.main_menu_select(mode)
         if choice == "Create a new team":
-            team_controller.new_team()
+            name = team_controller.new_team_name()
+            team_controller.current_team = Team(name, team_controller.default_pokemon_list)
         elif choice == "Load a saved team":
             team_controller.load_saved_team()
         elif choice == "Delete a saved team":
@@ -53,10 +60,12 @@ def main_online():
                 print(f"\nUnable to save {current_team.name}!")
                 print(f"{is_saved[1]}\n")
                 is_saved = (None, "")
-            team_choice = current_team.team_menu()
+            team_choice = current_team.team_menu(mode)
             if team_choice == "Save team":
                 team_controller.team_data = current_team.team_save(team_controller.team_data)
                 is_saved = team_controller.save_all_teams()
+            elif team_choice == "Rename team":
+                current_team.name = team_controller.new_team_name()
             elif team_choice == "Back to main menu":
                 team_controller.team_data = current_team.team_save(team_controller.team_data)
                 team_controller.save_all_teams()
@@ -66,7 +75,7 @@ def main_online():
                 while True:
                     clear()
                     current_pokemon.view_pokemon(current_team.name, team_choice)
-                    pokemon_choice = current_pokemon.pokemon_menu()
+                    pokemon_choice = current_pokemon.pokemon_menu(mode)
                     if pokemon_choice == "Change Pokemon":
                         pass
                         pokemon_lists = ("Generation 1", "Generation 2",
@@ -135,12 +144,13 @@ if __name__ == "__main__":
             if api_check == 200:
                 requests_cache.install_cache('pokeapi_cache')
                 api_handler = APIHandler()
-                team_controller = Data("main")
-                main_online()
+                main("online")
             else:
                 message = "Pokeapi.co is currently unreachable."
         except requests.ConnectionError:
             message = "Your computer is not currently connected to the internet!"
+
+    main("offline", message)
 
 # this is to get test data for testing save function
 # team = Team("test team", team_controller.default_pokemon_list)

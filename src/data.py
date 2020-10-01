@@ -47,7 +47,7 @@ class Data():
 
         return converted_data
 
-    def get_main_menu_options(self):
+    def get_main_menu_options(self, mode):
         options = [
             "Create a new team",
             None,
@@ -65,35 +65,37 @@ class Data():
             options[1] = "Load a saved team"
             options[2] = "Delete a saved team"
 
-        return options
+        if mode == "online":
+            return options
+        else:
+            return options[1:]
 
-    def main_menu_select(self):
+    def main_menu_select(self, mode):
         main_menu_options = [
             {
                 "type": "list",
                 "name": "main_menu_option",
                 "message": "What would you like to do?",
-                "choices": self.get_main_menu_options()
+                "choices": self.get_main_menu_options(mode)
             }
         ]
 
         return prompt(main_menu_options)["main_menu_option"]
 
-    def new_team(self):
+    def new_team_name(self):
 
         new_team_name = [
             {
                 "type": "input",
                 "name": "new_team_name",
-                "message": "What would you like to name this new team?:",
+                "message": "What would you like to name this team?:",
                 "default": "New Team",
                 "validate": lambda val: val.strip(" ") not in [team.name for team in self.team_data] + [""] or  # noqa: W504
                 "Invalid name. Must contain at least 1 non-space character and not be in use by a currently saved team."
             }
         ]
 
-        self.current_team = Team(prompt(new_team_name)["new_team_name"],
-                                 self.default_pokemon_list)
+        return prompt(new_team_name)["new_team_name"]
 
     def select_saved_team(self):
         saved_team_choice = [

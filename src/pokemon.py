@@ -72,39 +72,49 @@ class Pokemon():
         print(f"  - {self.move_set[3].name}")
         print("\n")
 
-    def get_pokemon_options(self):
+    def get_pokemon_options(self, mode):
         options = [
             "Change Pokemon",
             None,
             "Back to team view"
         ]
 
-        if self.name == "None":
-            options[1] = {"name": "Change moves",
-                          "disabled": "Cannot change moves on an empty pokemon slot"}
+        if mode == "online":
+            if self.name == "None":
+                options[1] = {"name": "Change moves",
+                              "disabled": "Cannot change moves on an empty pokemon slot"}
+            else:
+                options[1] = "Change moves"
+
+            return options
+
         else:
-            options[1] = "Change moves"
+            if self.name == "None":
+                options[1] = {"name": "View moves",
+                              "disabled": "Cannot view moves on an empty pokemon slot"}
+            else:
+                options[1] = "View moves"
 
-        return options
+            return options[1:]
 
-    def pokemon_menu(self):
+    def pokemon_menu(self, mode):
         pokemon_options = [
             {
                 "type": "list",
                 "name": "pokemon_menu",
                 "message": "What would you like to do with this pokemon slot?",
-                "choices": self.get_pokemon_options()
+                "choices": self.get_pokemon_options(mode)
             }
         ]
 
         pokemon_option = prompt(pokemon_options)["pokemon_menu"]
 
-        if pokemon_option == "Change moves":
+        if pokemon_option == "Change moves" or pokemon_option == "View moves":
             select_pokemon_move = [
                 {
                     "type": "list",
                     "name": "select_pokemon_move",
-                    "message": "Which move slot would you like to change?",
+                    "message": "Which move slot would you like to select?",
                     "choices": [
                         "Slot 1 - " + (self.move_set[0].name
                                        if self.move_set[0].name != "None"

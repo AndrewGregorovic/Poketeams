@@ -23,28 +23,52 @@ class Team():
             else:
                 print("    Empty\n")
 
-    def team_menu(self):
+    def get_team_menu_options(self, mode):
+        options = [
+            None,
+            "Rename team",
+            "Save team",
+            "Back to main menu"
+        ]
+
+        empty_team = True
+        for pokemon in self.pokemon_list:
+            if pokemon.name != "None":
+                empty_team = False
+
+        if mode == "online":
+            options[0] = "Edit team"
+        elif mode == "offline" and empty_team is True:
+            options[0] = {"name": "View Pokemon",
+                          "disabled": "There are no Pokemon saved to this team"}
+        else:
+            options[0] = "View Pokemon"
+
+        return options
+
+    def team_menu(self, mode):
         team_options = [
             {
                 "type": "list",
                 "name": "team_menu",
                 "message": "What would you like to do with this team?",
-                "choices": [
-                    "Edit team",
-                    "Save team",
-                    "Back to main menu"
-                ]
+                "choices": self.get_team_menu_options(mode)
             }
         ]
 
-        team_option = prompt(team_options)["team_menu"]
+        while True:
+            team_option = prompt(team_options)["team_menu"]
+            if team_option not in team_options[0]["choices"]:
+                print("Can't select a disabled option, please try again.\n")
+            else:
+                break
 
-        if team_option == "Edit team":
+        if team_option == "Edit team" or team_option == "View Pokemon":
             select_team_pokemon = [
                 {
                     "type": "list",
                     "name": "select_team_pokemon",
-                    "message": "Which Pokemon slot would you like to change?",
+                    "message": "Which Pokemon slot would you like to select?",
                     "choices": [
                         "Slot 1 - " + (self.pokemon_list[0].name
                                        if self.pokemon_list[0].name != "None"
