@@ -11,6 +11,7 @@ from apihandler import APIHandler  # noqa: E402
 
 
 class TestAPIHandlerClass(unittest.TestCase):
+
     def setUp(self):
         """Instantiate the api handler before each test"""
         self.test_api_handler = APIHandler()

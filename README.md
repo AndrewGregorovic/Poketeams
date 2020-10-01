@@ -95,7 +95,7 @@ Python standard libraries
 - `requests`: Used to make the http requests to fetch data from PokéAPI.
 - `requests_cache`: Used to create a cache file to store data retrieved from api calls. This improves performance when making repeat requests and reduces the number of api calls the application needs to make. This is also used to ensure that the application follows PokéAPI's fair use policy.
 
-While it's not a dependency, this application also uses `flake8` to check that the source code is following the PEP8 style guide. As PEP8 is only a set of guidelines, the source code doesn't follow them religiously. In particular E501 which recommends that lines are no longer than 79 characters would in my opinion cause certain sections of code to be less readable and cause issues with trying to follow other points in the style guide.
+While it's not a dependency, this application also uses `flake8` to check that the source code is following the PEP8 style guide. As PEP8 is only a set of guidelines, the source code doesn't follow them religiously. In particular E501 which recommends that lines are no longer than 79 characters would in my opinion cause certain sections of code to be less readable and cause issues with trying to follow other points in the style guide so it is ignored.
 
 ## Implementation Plan
 

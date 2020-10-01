@@ -92,15 +92,19 @@ class Data():
 
         return main_menu_option
 
-    def new_team_name(self) -> str:
+    def new_team_name(self, current_team) -> str:
         """Get user input for the team name"""
+        current_name_list = [team.name for team in self.team_data] + [""]
+        if current_team:
+            current_name_list.remove(current_team.name)
+
         new_team_name: list = [
             {
                 "type": "input",
                 "name": "new_team_name",
                 "message": "What would you like to name this team?:",
                 "default": "New Team",
-                "validate": lambda val: val.strip(" ") not in [team.name for team in self.team_data] + [""] or  # noqa: W504
+                "validate": lambda val: val.strip(" ") not in current_name_list or  # noqa: W504
                 "Invalid name. Must contain at least 1 non-space character and not be in use by a currently saved team."
             }
         ]
@@ -128,15 +132,16 @@ class Data():
             if team.name == selected_team:
                 self.current_team = team
 
-    def delete_saved_team(self) -> None:
+    def delete_saved_team(self) -> str:
         """Delete selected team"""
         selected_team: str = self.select_saved_team()
 
         for team in self.team_data:
             if team.name == selected_team:
                 self.team_data.remove(team)
-                print(f"{selected_team} has been deleted.")
                 self.current_team = None
+
+        return f"{selected_team} has been deleted."
 
     def save_all_teams(self) -> tuple:
         """Write the team data to .json file after converting it to json"""

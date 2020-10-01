@@ -48,7 +48,7 @@ class Pokemon():
 
     def view_pokemon(self, team_name, team_choice):
         print(f"Team: {team_name}")
-        print(f"Slot #{team_choice + 1}\n\n")
+        print(f"Slot #{int(team_choice)}\n\n")
         print(f"Name: {self.name}")
         print(f"Pokedex ID: {self.id}\n")
         print(f"Height: {self.height} decimetres")

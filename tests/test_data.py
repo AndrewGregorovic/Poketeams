@@ -16,6 +16,7 @@ from team import Team  # noqa: E402
 
 
 class TestDataClass(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         """Create the /json directory before running any tests"""
@@ -62,9 +63,8 @@ class TestDataClass(unittest.TestCase):
         self.assertEqual(test_data_class.team_data, [], "team_data attribute has not been set to []!")
 
     def test_init_load_json(self):
-        """Tests Data.convert_to_objects, Team.from_json, Pokemon.from_json,
-        Move.from_json methods as all need to be called and function correctly
-        in order to properly load the saved json data"""
+        """Tests Data.convert_to_objects, Team.from_json, Pokemon.from_json, Move.from_json methods
+        All need to be called and function correctly in order to properly load the saved json data"""
 
         default_move = ["None", 0, 0, 0, ("None",), 0, "None"]
         default_pokemon = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
@@ -78,7 +78,7 @@ class TestDataClass(unittest.TestCase):
         test_data_class = Data("test")
         self.assertIsInstance(test_data_class.team_data, list, "team_data attribute is not a list!")
         self.assertEqual(len(test_data_class.team_data), 2, "team_data attribute does not have 2 elements!")
-        self.assertIsInstance(test_data_class.team_data[0], Team, "first element of team_data is not a Teamobject!")
+        self.assertIsInstance(test_data_class.team_data[0], Team, "first element of team_data is not a Team object!")
         self.assertEqual(test_data_class.team_data[0].name, "test1", "first team_data element does not have a nameattribute with value 'test1'!")
         self.assertIsInstance(test_data_class.team_data[0].pokemon_list[0], Pokemon, "first element in test1 Team's pokemon_list is not a Pokemon object")
         self.assertIsInstance(test_data_class.team_data[0].pokemon_list[0].move_set[0], Move, "first element in Pokemon object's move_set is not a Move object!")
@@ -88,21 +88,24 @@ class TestDataClass(unittest.TestCase):
         test_data_class = Data("test")
 
         test_data_class.team_data = []
-        self.assertIsInstance(test_data_class.get_main_menu_options("online"), list, "Returned options is not a list!")
-        self.assertEqual(len(test_data_class.get_main_menu_options("online")), 5, "Online menu should have 5 options!")
-        self.assertIsInstance(test_data_class.get_main_menu_options("online")[1], dict, "Load a saved team option (online) is not a dict!")
-        self.assertIsInstance(test_data_class.get_main_menu_options("online")[2], dict, "Delete a saved team option (online) is not a dict!")
+        test_options = test_data_class.get_main_menu_options("online")
+        self.assertEqual(len(test_options), 5, "Online menu should have 5 options!")
+        self.assertIsInstance(test_options[1], dict, "Load a saved team option (online) is not a dict!")
+        self.assertIsInstance(test_options[2], dict, "Delete a saved team option (online) is not a dict!")
 
-        self.assertEqual(len(test_data_class.get_main_menu_options("offline")), 4, "Offline menu should have 4 options!")
-        self.assertIsInstance(test_data_class.get_main_menu_options("offline")[0], dict, "Load a saved team option (offline) is not a dict!")
-        self.assertIsInstance(test_data_class.get_main_menu_options("offline")[1], dict, "Delete a saved team option (offline) is not a dict!")
+        test_options = test_data_class.get_main_menu_options("offline")
+        self.assertEqual(len(test_options), 4, "Offline menu should have 4 options!")
+        self.assertIsInstance(test_options[0], dict, "Load a saved team option (offline) is not a dict!")
+        self.assertIsInstance(test_options[1], dict, "Delete a saved team option (offline) is not a dict!")
 
         test_data_class.team_data = [Team("menu_options_enabled?", test_data_class.default_pokemon_list)]
-        self.assertIsInstance(test_data_class.get_main_menu_options("online")[1], str, "Load a saved team option (online) is not a str!")
-        self.assertIsInstance(test_data_class.get_main_menu_options("online")[2], str, "Delete a saved team option (online) is not a str!")
+        test_options = test_data_class.get_main_menu_options("online")
+        self.assertIsInstance(test_options[1], str, "Load a saved team option (online) is not a str!")
+        self.assertIsInstance(test_options[2], str, "Delete a saved team option (online) is not a str!")
 
-        self.assertIsInstance(test_data_class.get_main_menu_options("offline")[0], str, "Load a saved team option (offline) is not a str!")
-        self.assertIsInstance(test_data_class.get_main_menu_options("offline")[1], str, "Delete a saved team option (offline) is not a str!")
+        test_options = test_data_class.get_main_menu_options("offline")
+        self.assertIsInstance(test_options[0], str, "Load a saved team option (offline) is not a str!")
+        self.assertIsInstance(test_options[1], str, "Delete a saved team option (offline) is not a str!")
 
     def test_current_team_after_load(self):
         """Test Data.load_saved_team()"""

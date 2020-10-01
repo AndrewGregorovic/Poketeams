@@ -30,6 +30,8 @@ def main(mode: str, message: str = "") -> None:
     mode ("online" or "offline"), the mode that the application is currently running in
     message, the appropriate error message if there is a connection issue
     """
+    deleted: str = ""
+
     while True:
         clear()
         print(art.text2art("Poketeams"))
@@ -44,14 +46,18 @@ def main(mode: str, message: str = "") -> None:
         team_controller: Data = Data("main")
 
         # Main menu screen
+        if deleted != "":
+            print(f"{deleted}\n")
+            deleted == ""
+
         choice: str = team_controller.main_menu_select(mode)
         if choice == "Create a new team":
-            name: str = team_controller.new_team_name()
+            name: str = team_controller.new_team_name(team_controller.current_team)
             team_controller.current_team = Team(name, team_controller.default_pokemon_list)
         elif choice == "Load a saved team":
             team_controller.load_saved_team()
         elif choice == "Delete a saved team":
-            team_controller.delete_saved_team()
+            deleted = team_controller.delete_saved_team()
             team_controller.save_all_teams()
         else:
             team_controller.save_all_teams()
@@ -80,13 +86,13 @@ def main(mode: str, message: str = "") -> None:
                 team_controller.team_data = current_team.team_save(team_controller.team_data)
                 is_saved = team_controller.save_all_teams()
             elif team_choice == "Rename team":
-                current_team.name = team_controller.new_team_name()
+                current_team.name = team_controller.new_team_name(current_team)
             elif team_choice == "Back to main menu":
                 team_controller.team_data = current_team.team_save(team_controller.team_data)
                 team_controller.save_all_teams()
                 break
             else:
-                current_pokemon: Pokemon = current_team.pokemon_list[team_choice]
+                current_pokemon: Pokemon = current_team.pokemon_list[int(team_choice) - 1]
 
                 while True:
                     # View pokemon screen
@@ -138,7 +144,7 @@ def main(mode: str, message: str = "") -> None:
 
                                 if confirm_pokemon == "Add Pokémon":
                                     current_pokemon = new_pokemon
-                                    current_team.pokemon_list[team_choice] = new_pokemon
+                                    current_team.pokemon_list[int(team_choice) - 1] = new_pokemon
                                     break
 
                     elif pokemon_choice == "Back to team view":
