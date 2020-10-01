@@ -96,22 +96,22 @@ class TestDataClass(unittest.TestCase):
                               move_set[0], Move, """first element in Pokemon
                                object's move_set is not a Move object!""")
 
-    def test_menu_options_disabled(self):
+    def test_online_menu_options_disabled(self):
         test_data_class = Data("test")
         test_data_class.team_data = []
-        self.assertIsInstance(test_data_class.get_main_menu_options()[1],
+        self.assertIsInstance(test_data_class.get_main_menu_options("online")[1],
                               dict, "Load a saved team option is not a dict!")
-        self.assertIsInstance(test_data_class.get_main_menu_options()[2],
+        self.assertIsInstance(test_data_class.get_main_menu_options("online")[2],
                               dict, """Delete a saved team option is not a
                                dict!""")
 
-    def test_menu_options_enabled(self):
+    def test_online_menu_options_enabled(self):
         test_data_class = Data("test")
         test_data_class.team_data = [Team("menu_options_enabled?",
                                      test_data_class.default_pokemon_list)]
-        self.assertIsInstance(test_data_class.get_main_menu_options()[1],
+        self.assertIsInstance(test_data_class.get_main_menu_options("online")[1],
                               str, "Load a saved team option is not a str!")
-        self.assertIsInstance(test_data_class.get_main_menu_options()[2],
+        self.assertIsInstance(test_data_class.get_main_menu_options("online")[2],
                               str, "Delete a saved team option is not a str!")
 
     # def test_new_team(self):
