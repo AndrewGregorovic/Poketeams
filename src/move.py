@@ -30,7 +30,7 @@ class Move():
         for move in pokemon.move_list:
             if move not in learnt_moves:
                 unlearnt_moves.append(f" {move} ")
-            
+
         while len(unlearnt_moves) % 4 != 0:
             unlearnt_moves.append("")
 

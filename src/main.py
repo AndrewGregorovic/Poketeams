@@ -138,7 +138,8 @@ def main(mode, message=""):
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
-        with open(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/help.md") as f:
+        with open(os.path.dirname(os.path.abspath(__file__)) + "/help.md") as f:
+            clear()
             print(f.read())
     else:
         try:
@@ -152,7 +153,7 @@ if __name__ == "__main__":
         except requests.ConnectionError:
             message = "Your computer is not currently connected to the internet!"
 
-    main("offline", message)
+        main("offline", message)
 
 # this is to get test data for testing save function
 # team = Team("test team", team_controller.default_pokemon_list)
