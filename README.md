@@ -85,6 +85,7 @@ Python standard libraries
 - `os`: Used to perform terminal commands within python code for the application to function as intended.
 - `shutil`: Used to delete the `src/json/` directory for testing purposes.
 - `sys`: Used to check for the presence of the `--help` option when starting the application and to insert the `src/` directory into the system path variable to aid in importing source code into the unit testing files.
+- `typing`: Used to create Union objects for type hinting variables that can contain multiple data types.
 - `unittest`: Used for automated and manual testing to check that certain functions within the source code are working correctly.
 
 3rd party libraries

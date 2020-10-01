@@ -12,7 +12,6 @@ from apihandler import APIHandler
 from data import Data
 from pokemon import Pokemon
 from team import Team
-# import json
 
 
 def clear() -> None:
@@ -34,11 +33,11 @@ def main(mode: str, message: str = "") -> None:
     while True:
         clear()
         print(art.text2art("Poketeams"))
-        print("Build the ultimate Pokémon teams\n\n")
+        print("\u001b[1mBuild the ultimate Pokémon teams\u001b[0m\n\n")
 
         if message:
-            print(message)
-            print("\nStarting Pokéteams in offline mode.\n")
+            print(f"\u001b[4m{message}\u001b[0m")
+            print("\n\u001b[7m !!! Starting Pokéteams in offline mode !!! \u001b[0m\n")
             print("You will only be able to view, delete and rename saved teams while offline.")
             print("Please check your internet connection and restart the app to get full functionality.\n\n")
 
@@ -185,9 +184,3 @@ if __name__ == "__main__":
             message = "Your computer is not currently connected to the internet!"
 
         main("offline", message)
-
-# this is to get test data for testing save function
-# team = Team("test team", team_controller.default_pokemon_list)
-# print(json.dumps(team, default=lambda o: o.__dict__))
-
-# Additional feature if time, have offline mode to only view saved teams

@@ -7,16 +7,16 @@ from move import Move
 
 class Pokemon():
 
-    def __init__(self, id, name, types, weight, height,
-                 abilities, move_list, move_set):
-        self.id = id
-        self.name = name
-        self.types = types
-        self.weight = weight
-        self.height = height
-        self.abilities = abilities
-        self.move_list = move_list
-        self.move_set = move_set
+    def __init__(self, id: int, name: str, types: tuple, weight: int, height: int,
+                 abilities: dict, move_list: list, move_set: list) -> None:
+        self.id: int = id
+        self.name: str = name
+        self.types: tuple = types
+        self.weight: int = weight
+        self.height: int = height
+        self.abilities: dict = abilities
+        self.move_list: list = move_list
+        self.move_set: list = move_set
 
     @classmethod
     def from_json(cls, data):
@@ -37,7 +37,7 @@ class Pokemon():
             r = json.loads(api_handler.get_ability(ability["ability"]["name"]).text)
             for effect_entry in r["effect_entries"]:
                 if effect_entry["language"]["name"] == "en":
-                    abilities[ability["ability"]["name"].capitalize()] = effect_entry["effect"]
+                    abilities[ability["ability"]["name"].capitalize()] = effect_entry["effect"].replace("\n", " ").replace("  ", " ")
         move_list = [move["move"]["name"].capitalize() for move in api_data["moves"]]
         default_move = ["None", "None", "None", "None", "None", "None", "None"]
         if len(move_list) < 4:
@@ -74,7 +74,7 @@ class Pokemon():
 
     def get_pokemon_options(self, mode):
         options = [
-            "Change Pokemon",
+            "Change Pokémon",
             None,
             "Back to team view"
         ]

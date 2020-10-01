@@ -14,17 +14,19 @@ class Data():
     def __init__(self, name: str) -> None:
 
         self.current_team: Union[None, Team] = None
-        self.default_move: list = ["None", "None", "None", "None", "None", "None", "None"]
-        self.default_pokemon: list = ["None", "None", ("None",), "None", "None", {"None": "None"}, [],
+        self.default_move: list = ["None", 0, 0, 0, ("None",), 0, "None"]
+        self.default_pokemon: list = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
                                       [Move(*self.default_move), Move(*self.default_move), Move(*self.default_move), Move(*self.default_move)]]
         self.default_pokemon_list: list = [Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon),
                                            Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon)]
 
+        # Create different json files for testing and actually using the app
         if name == "test":
-            self.team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/test_data.json"
+            self.team_data_path: str = os.path.dirname(os.path.abspath(__file__)) + "/json/test_data.json"
         else:
             self.team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/team_data.json"
 
+        # Try to create the /json directory to be sure that it's there
         try:
             os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "/json")
         except FileExistsError:
@@ -32,20 +34,22 @@ class Data():
 
         try:
             with open(self.team_data_path, "r") as f:
-                json_data = json.loads(f.readline())
-                self.team_data = self.convert_to_objects(json_data)
+                self.team_data: list = self.convert_to_objects(json.loads(f.readline()))
         except (FileNotFoundError, json.decoder.JSONDecodeError):
             self.team_data = []
 
-    def convert_to_objects(self, json_data):
-        converted_data = []
+    @staticmethod
+    def convert_to_objects(json_data: list) -> list:
+        """Passes each set of team data to the Team.from_json() class method to create the Team class"""
+        converted_data: list = []
         for team in json_data:
             converted_data.append(Team.from_json(team))
 
         return converted_data
 
-    def get_main_menu_options(self, mode):
-        options = [
+    def get_main_menu_options(self, mode: str) -> list:
+        """Determine which main menu options should be present and enabled"""
+        options: list = [
             "Create a new team",
             None,
             None,
@@ -67,8 +71,9 @@ class Data():
         else:
             return options[1:]
 
-    def main_menu_select(self, mode):
-        main_menu_options = [
+    def main_menu_select(self, mode: str) -> str:
+        """Display the main menu options"""
+        main_menu_options: list = [
             {
                 "type": "list",
                 "name": "main_menu_option",
@@ -77,11 +82,19 @@ class Data():
             }
         ]
 
-        return prompt(main_menu_options)["main_menu_option"]
+        # Ensure that a disabled option can't be selected even if it's the default selection
+        while True:
+            main_menu_option: str = prompt(main_menu_options)["main_menu_option"]
+            if main_menu_option not in main_menu_options[0]["choices"]:
+                print("Can't select a disabled option, please try again.\n")
+            else:
+                break
 
-    def new_team_name(self):
+        return main_menu_option
 
-        new_team_name = [
+    def new_team_name(self) -> str:
+        """Get user input for the team name"""
+        new_team_name: list = [
             {
                 "type": "input",
                 "name": "new_team_name",
@@ -94,8 +107,9 @@ class Data():
 
         return prompt(new_team_name)["new_team_name"]
 
-    def select_saved_team(self):
-        saved_team_choice = [
+    def select_saved_team(self) -> str:
+        """Get user's selection for which team to load or delete"""
+        saved_team_choice: list = [
             {
                 "type": "list",
                 "name": "saved_team_choice",
@@ -106,18 +120,17 @@ class Data():
 
         return prompt(saved_team_choice)["saved_team_choice"]
 
-    def load_saved_team(self):
-
-        selected_team = self.select_saved_team()
+    def load_saved_team(self) -> None:
+        """Load selected team"""
+        selected_team: str = self.select_saved_team()
 
         for team in self.team_data:
             if team.name == selected_team:
                 self.current_team = team
-                return
 
-    def delete_saved_team(self):
-
-        selected_team = self.select_saved_team()
+    def delete_saved_team(self) -> None:
+        """Delete selected team"""
+        selected_team: str = self.select_saved_team()
 
         for team in self.team_data:
             if team.name == selected_team:
@@ -125,12 +138,12 @@ class Data():
                 print(f"{selected_team} has been deleted.")
                 self.current_team = None
 
-    def save_all_teams(self):
-        # save to json file
+    def save_all_teams(self) -> tuple:
+        """Write the team data to .json file after converting it to json"""
         try:
             if self.team_data != []:
-                json_team_data = json.dumps(self.team_data,
-                                            default=lambda o: o.__dict__)
+                json_team_data = json.dumps(self.team_data, default=lambda o: o.__dict__)
+
                 with open(self.team_data_path, "w") as f:
                     f.write(json_team_data)
             else:

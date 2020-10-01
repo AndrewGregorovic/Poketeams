@@ -1,14 +1,13 @@
 class Move():
 
-    def __init__(self, name, accuracy, power, pp,
-                 types, effect_chance, effect):
-        self.name = "None"
-        self.accuracy = "None"
-        self.power = "None"
-        self.pp = "None"
-        self.types = ("None")
-        self.effect_chance = "None"
-        self.effect = "None"
+    def __init__(self, name: str, accuracy: int, power: int, pp: int, types: tuple, effect_chance: int, effect: str):
+        self.name: str = name
+        self.accuracy: int = accuracy
+        self.power: int = power
+        self.pp: int = pp
+        self.types: tuple = types
+        self.effect_chance: int = effect_chance
+        self.effect: str = effect
 
     @classmethod
     def from_json(cls, data):
