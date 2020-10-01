@@ -39,7 +39,9 @@ jobs:
           mypy tests/ src/
           flake8 --ignore=E501 tests/ src/
   deployment:
-    needs: unit_testing
+    needs: 
+      - unit_testing
+      - code_checking
     runs-on: ubuntu-latest
     steps:
       - name: Fresh Repo Clone & Install
