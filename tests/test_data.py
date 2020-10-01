@@ -64,7 +64,7 @@ class TestDataClass(unittest.TestCase):
         in order to properly load the saved json data"""
 
         default_move = ["None", "None", "None", "None", "None", "None", "None"]
-        default_pokemon = ["None", "None", "None", "None", "None", "None",
+        default_pokemon = ["None", "None", ("None",), "None", "None", {"None": "None"},
                            [], [Move(*default_move), Move(*default_move),
                                 Move(*default_move), Move(*default_move)]]
         default_pokemon_list = [Pokemon(*default_pokemon),

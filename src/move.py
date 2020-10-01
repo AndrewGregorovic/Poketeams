@@ -14,6 +14,10 @@ class Move():
     def from_json(cls, data):
         return cls(**data)
 
+    @classmethod
+    def from_response(cls, response):
+        pass
+
     def view_move(self):
         pass
 

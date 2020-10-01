@@ -13,10 +13,26 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run Tests
         run: |
           python -m unittest discover tests/
+deployment:
+    needs: unit-testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fresh Repo Clone & Install
+        uses: appleboy/ssh-action@master
+        with:
+          host: 54.82.207.212
+          username: app-deploy
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            rm -rf poketeams
+            git clone git@github.com:AndrewGregorovic/Poketeams.git
+            python3.8 -m venv /home/app-deploy/poketeams/venv
+            /home/app-deploy/poketeams/venv/bin/pip3.8 install -r /home/app-deploy/poketeams/requirements.txt
