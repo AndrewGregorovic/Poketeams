@@ -74,10 +74,12 @@ def main(mode, message=""):
                 current_pokemon = current_team.pokemon_list[team_choice]
                 while True:
                     clear()
-                    current_pokemon.view_pokemon(current_team.name, team_choice)
-                    pokemon_choice = current_pokemon.pokemon_menu(mode)
+                    if current_pokemon.name != "None":
+                        current_pokemon.view_pokemon(current_team.name, team_choice)
+                        pokemon_choice = current_pokemon.pokemon_menu(mode)
+                    else:
+                        pokemon_choice = "Change Pokemon"
                     if pokemon_choice == "Change Pokemon":
-                        pass
                         pokemon_lists = ("Generation 1", "Generation 2",
                                          "Generation 3", "Generation 4",
                                          "Generation 5", "Generation 6",

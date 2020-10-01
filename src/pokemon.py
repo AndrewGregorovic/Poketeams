@@ -192,7 +192,7 @@ class Pokemon():
             pokemon_list.append(f" #{number} {result['name'].capitalize()} ")
             number += 1
 
-        while len(pokemon_list) % 4 != 0:
+        while len(pokemon_list) % 5 != 0:
             pokemon_list.append("")
 
         print(f"{view_list} Pokémon:\n")
@@ -213,6 +213,3 @@ class Pokemon():
         ]
 
         return prompt(confirm_pokemon)["confirm_pokemon"]
-
-    def view_move_list(self):
-        pass
