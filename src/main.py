@@ -3,9 +3,9 @@
 import os
 import sys
 
-import art
+import art  # type: ignore
 import requests
-import requests_cache
+import requests_cache  # type: ignore
 
 from apihandler import APIHandler
 from data import Data
@@ -55,12 +55,10 @@ def main_online():
                 is_saved = (None, "")
             team_choice = current_team.team_menu()
             if team_choice == "Save team":
-                team_controller.team_data = current_team.team_save(
-                                            team_controller.team_data)
+                team_controller.team_data = current_team.team_save(team_controller.team_data)
                 is_saved = team_controller.save_all_teams()
             elif team_choice == "Back to main menu":
-                team_controller.team_data = current_team.team_save(
-                                            team_controller.team_data)
+                team_controller.team_data = current_team.team_save(team_controller.team_data)
                 team_controller.save_all_teams()
                 break
             else:
@@ -109,7 +107,8 @@ def main_online():
                     elif pokemon_choice == "Back to team view":
                         break
                     else:
-                        current_move = current_pokemon.move_set[pokemon_choice]
+                        pass
+                        # current_move = current_pokemon.move_set[pokemon_choice]
                         # current_move.view_move()
                         # move_choice =  current_move.move_menu()
                         # if move_choice = "Change move":
@@ -128,21 +127,20 @@ def main_online():
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
-        with open(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                  + "/help.md") as f:
+        with open(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/help.md") as f:
             print(f.read())
     else:
         try:
-            api_check = requests.get("https://pokeapi.co/api/v2/")
-            if api_check.status_code == 200:
+            api_check = requests.get("https://pokeapi.co/api/v2/").status_code
+            if api_check == 200:
                 requests_cache.install_cache('pokeapi_cache')
                 api_handler = APIHandler()
                 team_controller = Data("main")
                 main_online()
+            else:
+                message = "Pokeapi.co is currently unreachable."
         except requests.ConnectionError:
-            print("Your computer is not currently connected to the internet!")
-            
-
+            message = "Your computer is not currently connected to the internet!"
 
 # this is to get test data for testing save function
 # team = Team("test team", team_controller.default_pokemon_list)

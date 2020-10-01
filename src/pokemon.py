@@ -1,6 +1,6 @@
 import json
 
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt, Separator  # type: ignore
 
 from move import Move
 
@@ -74,9 +74,9 @@ class Pokemon():
 
     def get_pokemon_options(self):
         options = [
-                    "Change Pokemon",
-                    None,
-                    "Back to team view"
+            "Change Pokemon",
+            None,
+            "Back to team view"
         ]
 
         if self.name == "None":
@@ -171,7 +171,7 @@ class Pokemon():
             ]
 
             return prompt(search_pokemon)["search_pokemon"]
-        
+
         else:
             return selection
 
@@ -181,7 +181,7 @@ class Pokemon():
         for result in api_data["results"]:
             pokemon_list.append(f" #{number} {result['name'].capitalize()} ")
             number += 1
-        
+
         while len(pokemon_list) % 4 != 0:
             pokemon_list.append("")
 

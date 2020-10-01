@@ -3,10 +3,9 @@ import sys
 import unittest
 
 
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                + "/src")
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/src")
 
-from move import Move  # noqa: E402
+# from move import Move  # noqa: E402
 
 
 class TestMoveClass(unittest.TestCase):

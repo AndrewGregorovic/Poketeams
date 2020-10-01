@@ -3,10 +3,9 @@ import sys
 import unittest
 
 
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                + "/src")
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/src")
 
-from apihandler import APIHandler  # noqa: E402
+# from apihandler import APIHandler  # noqa: E402
 
 
 class TestAPIHandlerClass(unittest.TestCase):

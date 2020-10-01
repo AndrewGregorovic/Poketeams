@@ -5,8 +5,7 @@ import sys
 import unittest
 
 
-project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) \
-               + "/src"
+project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/src"
 sys.path.insert(1, project_path)
 
 from data import Data  # noqa: E402

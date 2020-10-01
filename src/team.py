@@ -1,4 +1,4 @@
-from PyInquirer import prompt
+from PyInquirer import prompt  # type: ignore
 
 from pokemon import Pokemon
 

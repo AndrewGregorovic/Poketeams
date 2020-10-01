@@ -1,7 +1,7 @@
 import json
 import os
 
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt, Separator  # type: ignore
 
 from move import Move
 from pokemon import Pokemon
@@ -24,11 +24,9 @@ class Data():
 
     def __init__(self, name):
         if name == "test":
-            self.team_data_path = os.path.dirname(
-                        os.path.abspath(__file__)) + "/json/test_data.json"
+            self.team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/test_data.json"
         else:
-            self.team_data_path = os.path.dirname(
-                        os.path.abspath(__file__)) + "/json/team_data.json"
+            self.team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/team_data.json"
 
         try:
             os.mkdir(os.path.dirname(os.path.abspath(__file__)) + "/json")
@@ -89,11 +87,8 @@ class Data():
                 "name": "new_team_name",
                 "message": "What would you like to name this new team?:",
                 "default": "New Team",
-                "validate": lambda val: val.strip(" ") not in
-                           [team.name for team in self.team_data] + [""]
-                           or """Invalid name. Must contain at least 1
-                            non-space character and not be in use by a
-                            currently saved team."""
+                "validate": lambda val: val.strip(" ") not in [team.name for team in self.team_data] + [""] or  # noqa: W504
+                "Invalid name. Must contain at least 1 non-space character and not be in use by a currently saved team."
             }
         ]
 
