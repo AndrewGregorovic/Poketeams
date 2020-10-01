@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Union
 
 from PyInquirer import prompt, Separator  # type: ignore
 
@@ -10,19 +11,15 @@ from team import Team
 
 class Data():
 
-    current_team = None
-    default_move = ["None", "None", "None", "None", "None", "None", "None"]
-    default_pokemon = ["None", "None", ("None",), "None", "None", {"None": "None"}, [],
-                       [Move(*default_move), Move(*default_move),
-                        Move(*default_move), Move(*default_move)]]
-    default_pokemon_list = [Pokemon(*default_pokemon),
-                            Pokemon(*default_pokemon),
-                            Pokemon(*default_pokemon),
-                            Pokemon(*default_pokemon),
-                            Pokemon(*default_pokemon),
-                            Pokemon(*default_pokemon)]
+    def __init__(self, name: str) -> None:
 
-    def __init__(self, name):
+        self.current_team: Union[None, Team] = None
+        self.default_move: list = ["None", "None", "None", "None", "None", "None", "None"]
+        self.default_pokemon: list = ["None", "None", ("None",), "None", "None", {"None": "None"}, [],
+                                      [Move(*self.default_move), Move(*self.default_move), Move(*self.default_move), Move(*self.default_move)]]
+        self.default_pokemon_list: list = [Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon),
+                                           Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon)]
+
         if name == "test":
             self.team_data_path = os.path.dirname(os.path.abspath(__file__)) + "/json/test_data.json"
         else:

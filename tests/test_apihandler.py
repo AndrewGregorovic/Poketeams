@@ -27,21 +27,21 @@ class TestAPIHandlerClass(unittest.TestCase):
         self.assertIsInstance(test_response, requests.models.Response, "The function did not return a Response object!")
 
     def test_get_pokemon_with_query_string(self):
-        """Test APIHandler.get_pokemon() for retrieving a list of pokemon"""
+        """Test APIHandler.get_pokemon() for retrieving a list of pokemon using a query string"""
         test_response = self.test_api_handler.get_pokemon("", "?limit=107&offset=386")
         self.assertEqual(test_response.status_code, 200,
                          "The function didn't create the request url correctly returning a status code other than 200")
         self.assertIsInstance(test_response, requests.models.Response, "The function did not return a Response object!")
 
     def test_get_move(self):
-        """Test APIHandler.get_move() for retrieving a move"""
+        """Test APIHandler.get_move()"""
         test_response = self.test_api_handler.get_move("scratch")
         self.assertEqual(test_response.status_code, 200,
                          "The function didn't create the request url correctly returning a status code other than 200")
         self.assertIsInstance(test_response, requests.models.Response, "The function did not return a Response object!")
 
     def test_get_ability(self):
-        """Test APIHandler.get_ability() for retrieving an ability"""
+        """Test APIHandler.get_ability()"""
         test_response = self.test_api_handler.get_ability("blaze")
         self.assertEqual(test_response.status_code, 200,
                          "The function didn't create the request url correctly returning a status code other than 200")

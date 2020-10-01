@@ -2,6 +2,7 @@
 
 import os
 import sys
+from typing import Union
 
 import art  # type: ignore
 import requests
@@ -14,7 +15,8 @@ from team import Team
 # import json
 
 
-def clear():
+def clear() -> None:
+    """Clear screen utility function for both linux and windows"""
     if os.name == "nt":
         command = "cls"
     else:
@@ -23,20 +25,29 @@ def clear():
     os.system(command)
 
 
-def main(mode, message=""):
+def main(mode: str, message: str = "") -> None:
+    """
+    Main application function
+    mode ("online" or "offline"), the mode that the application is currently running in
+    message, the appropriate error message if there is a connection issue
+    """
     while True:
         clear()
         print(art.text2art("Poketeams"))
         print("Build the ultimate Pokémon teams\n\n")
+
         if message:
             print(message)
             print("\nStarting Pokéteams in offline mode.\n")
             print("You will only be able to view, delete and rename saved teams while offline.")
             print("Please check your internet connection and restart the app to get full functionality.\n\n")
-        team_controller = Data("main")
-        choice = team_controller.main_menu_select(mode)
+
+        team_controller: Data = Data("main")
+
+        # Main menu screen
+        choice: str = team_controller.main_menu_select(mode)
         if choice == "Create a new team":
-            name = team_controller.new_team_name()
+            name: str = team_controller.new_team_name()
             team_controller.current_team = Team(name, team_controller.default_pokemon_list)
         elif choice == "Load a saved team":
             team_controller.load_saved_team()
@@ -48,11 +59,14 @@ def main(mode, message=""):
             clear()
             exit()
 
-        current_team = team_controller.current_team
-        is_saved = (None, "")
+        current_team: Union[None, Team] = team_controller.current_team
+        is_saved: tuple = (None, "")
+
         while current_team is not None:
+            # View team screen
             clear()
             current_team.view_team()
+
             if is_saved[0] is True:
                 print(f"\n{current_team.name} has been saved!\n")
                 is_saved = (None, "")
@@ -60,7 +74,9 @@ def main(mode, message=""):
                 print(f"\nUnable to save {current_team.name}!")
                 print(f"{is_saved[1]}\n")
                 is_saved = (None, "")
-            team_choice = current_team.team_menu(mode)
+
+            team_choice: str = current_team.team_menu(mode)
+
             if team_choice == "Save team":
                 team_controller.team_data = current_team.team_save(team_controller.team_data)
                 is_saved = team_controller.save_all_teams()
@@ -71,22 +87,29 @@ def main(mode, message=""):
                 team_controller.save_all_teams()
                 break
             else:
-                current_pokemon = current_team.pokemon_list[team_choice]
+                current_pokemon: Pokemon = current_team.pokemon_list[team_choice]
+
                 while True:
+                    # View pokemon screen
                     clear()
+
+                    # Only view information if there is an actual pokemon here
+                    # otherwise skip to pokemon search/selection
                     if current_pokemon.name != "None":
                         current_pokemon.view_pokemon(current_team.name, team_choice)
-                        pokemon_choice = current_pokemon.pokemon_menu(mode)
+                        pokemon_choice: str = current_pokemon.pokemon_menu(mode)
                     else:
-                        pokemon_choice = "Change Pokemon"
-                    if pokemon_choice == "Change Pokemon":
-                        pokemon_lists = ("Generation 1", "Generation 2",
-                                         "Generation 3", "Generation 4",
-                                         "Generation 5", "Generation 6",
-                                         "Generation 7", "Generation 8")
-                        view_list = ""
+                        pokemon_choice = "Change Pokémon"
+
+                    if pokemon_choice == "Change Pokémon":
+                        pokemon_lists: tuple = ("Generation 1", "Generation 2", "Generation 3", "Generation 4",
+                                                "Generation 5", "Generation 6", "Generation 7", "Generation 8")
+                        view_list: str = ""
+
                         while True:
+                            # Search for pokemon screen
                             clear()
+
                             if view_list in pokemon_lists:
                                 if view_list == "Generation 1":
                                     current_pokemon.view_pokemon_list(view_list, 1, api_handler.get_pokemon("", "?limit=151&offset=0"))
@@ -104,17 +127,21 @@ def main(mode, message=""):
                                     current_pokemon.view_pokemon_list(view_list, 722, api_handler.get_pokemon("", "?limit=88&offset=721"))
                                 elif view_list == "Generation 8":
                                     current_pokemon.view_pokemon_list(view_list, 810, api_handler.get_pokemon("", "?limit=84&offset=809"))
+
                             view_list = current_pokemon.select_pokemon(api_handler)
+
                             if view_list not in pokemon_lists:
-                                response = api_handler.get_pokemon(view_list)
-                                new_pokemon = Pokemon.from_response(api_handler, response)
+                                # New pokemon view screen to confirm selection
+                                new_pokemon: Pokemon = Pokemon.from_response(api_handler, api_handler.get_pokemon(view_list))
                                 clear()
                                 new_pokemon.view_pokemon(current_team.name, team_choice)
-                                confirm_pokemon = new_pokemon.confirm_pokemon()
+                                confirm_pokemon: str = new_pokemon.confirm_pokemon()
+
                                 if confirm_pokemon == "Add Pokémon":
                                     current_pokemon = new_pokemon
                                     current_team.pokemon_list[team_choice] = new_pokemon
                                     break
+
                     elif pokemon_choice == "Back to team view":
                         break
                     else:
@@ -142,14 +169,18 @@ if __name__ == "__main__":
             clear()
             print(f.read())
     else:
+        # Check that we can connect to the api
+        # and start the app in the respective mode
         try:
-            api_check = requests.get("https://pokeapi.co/api/v2/").status_code
+            api_check: int = requests.get("https://pokeapi.co/api/v2/").status_code
+
             if api_check == 200:
                 requests_cache.install_cache('pokeapi_cache')
-                api_handler = APIHandler()
+                api_handler: APIHandler = APIHandler()
                 main("online")
             else:
-                message = "Pokeapi.co is currently unreachable."
+                message: str = "Pokeapi.co is currently unreachable."
+
         except requests.ConnectionError:
             message = "Your computer is not currently connected to the internet!"
 
