@@ -1,6 +1,6 @@
 # Pokéteams
 
-A Pokémon team builder terminal application that pulls pokémon related data from the awesome PokéAPI hosted at pokeapi.co. Pokéteams will help you build the ultimate pokémon teams when you're unable to play the games but are at a computer and have access to a terminal.
+A Pokémon team builder terminal application that pulls pokémon related data from the awesome PokéAPI hosted at [pokeapi.co](https://pokeapi.co). Pokéteams will help you build the ultimate pokémon teams when you're unable to play the games but are at a computer and have access to a terminal.
 
 - Create as many teams as you'd like so that you're never unprepared for a fight.
 - Update teams by changing their Pokémon or the moves you want those Pokémon to know.
@@ -39,7 +39,7 @@ Getting Pokéteams set up on your local machine only takes a few simple steps
 2. Install the modules in `requirements.txt` using the commands mentioned above in [Requirements](#requirements) 
 3. In your terminal run the command `<path/to>/Poketeams/src/main.py`
 
-If you have issues running main.py as an executable use the command `python <path/to>/Poketeams/src/main.py` or `python3 <path/to>/Poketeams/src/main.py` again depending on your Python set up.
+If you have issues running `main.py` as an executable use the command `python <path/to>/Poketeams/src/main.py` or `python3 <path/to>/Poketeams/src/main.py` again depending on your Python set up.
 
 ## Instructions
 
@@ -74,7 +74,7 @@ The main python file does not contain a class of its own, the purpose of the cod
 
 The control flow diagram displayed below is a rough representation of how the application functions.
 
-
+![Pokéteams control flow diagram](docs/t2a3_control_flow_diagram.png)
 
 ## Application Dependencies
 
@@ -94,9 +94,15 @@ Python standard libraries
 - `requests`: Used to make the http requests to fetch data from PokéAPI.
 - `requests_cache`: Used to create a cache file to store data retrieved from api calls. This improves performance when making repeat requests and reduces the number of api calls the application needs to make. This is also used to ensure that the application follows PokéAPI's fair use policy.
 
+While it's not a dependency, this application also uses `flake8` to check that the source code is following the PEP8 style guide. As PEP8 is only a set of guidelines, the source code doesn't follow them religiously. In particular E501 which recommends that lines are no longer than 79 characters would in my opinion cause certain sections of code to be less readable and cause issues with trying to follow other points in the style guide.
+
 ## Implementation Plan
 
 For development of this application I have chosen to use the Projects section of the Pokéteams github repository to track development progress. Previously I have used Trello however as this app is being developed on my local machine with commits being pushed directly to github, it made sense to use githubs provided Projects section rather than Trello in this case. Some screenshots of the project board during development are linked below with many more included in this repository inside the `docs/` directory.
 
 > Note: Images may need to be viewed at full size to more easily and clearly read the text.
 
+![Pokéteams project management screenshot 1](docs/t2a3_project_management_1.png)
+![Pokéteams project management screenshot 6](docs/t2a3_project_management_6.png)
+![Pokéteams project management screenshot 12](docs/t2a3_project_management_12.png)
+![Pokéteams project management screenshot 18](docs/t2a3_project_management_18.png)
