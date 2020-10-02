@@ -163,7 +163,7 @@ class Pokemon():
         """
 
         print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {team_name} \u001b[0m")
-        print(f"\u001b[4mSlot #{int(team_choice)}\u001b[0m\n\n")
+        print(f"\n\u001b[4mPokémon Slot #{int(team_choice)}\u001b[0m\n\n")
         print(f"\u001b[1mName\u001b[0m: {self.name}")
         print(f"\u001b[1mPokédex ID:\u001b[0m {self.id}\n")
         print(f"\u001b[1mHeight\u001b[0m: {self.height} decimetres")

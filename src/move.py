@@ -154,8 +154,8 @@ class Move():
         """
 
         print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {team_name} \u001b[0m")
-        print(f"\u001b[1m\u001b[4mPokémon\u001b[0m: \u001b[4m{pokemon_name}\u001b[0m\n\n")
-        print(f"\u001b[4mSlot #{int(pokemon_choice)}\u001b[0m\n\n")
+        print(f"\u001b[1m\u001b[4mPokémon\u001b[0m: \u001b[4m{pokemon_name}\u001b[0m")
+        print(f"\n\u001b[4mMove Slot #{int(pokemon_choice)}\u001b[0m\n\n")
         print(f"\u001b[1mName\u001b[0m: {self.name}\n")
         print(f"\u001b[1mPower\u001b[0m: {self.power}")
         print(f"\u001b[1mAccuracy\u001b[0m: {self.accuracy}" + "%")
