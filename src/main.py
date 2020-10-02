@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 from typing import Union
 
 import art  # type: ignore
@@ -23,6 +24,15 @@ def clear() -> None:
         command = "clear"
 
     os.system(command)
+
+
+def connection_error() -> None:
+    """Print error messages and exit the application"""
+    print("\n\n\n\u001b[7m !!! Pokéteams has encountered a connection issue !!! \u001b[0m\n\n")
+    print("\u001b[1mYour current team data has been saved, please restart the app to continue from where you were interrupted.\u001b[0m")
+    time.sleep(5)
+    clear()
+    exit()
 
 
 def main(mode: str, message: str = "") -> None:
@@ -133,11 +143,26 @@ def main(mode: str, message: str = "") -> None:
                                 elif view_list == "Generation 8":
                                     current_pokemon.view_pokemon_list(view_list, 810, api_handler.get_pokemon("", "?limit=84&offset=809"))
 
-                            view_list = current_pokemon.select_pokemon(api_handler)
+                            try:
+                                view_list = current_pokemon.select_pokemon(api_handler)
+                            except Exception:
+                                clear()
+                                team_controller.team_data = current_team.team_save(team_controller.team_data)
+                                team_controller.save_all_teams()
+                                connection_error()
 
                             if view_list not in pokemon_lists:
                                 # New pokemon view screen to confirm selection
-                                new_pokemon: Pokemon = Pokemon.from_response(api_handler, api_handler.get_pokemon(view_list))
+                                # While it's unlikely for a connection issue to occur here if there was no error in the try/except block above
+                                # include another to be safe as Pokemon.from_response() needs to make further api calls to get pokemon ability info
+                                try:
+                                    new_pokemon: Pokemon = Pokemon.from_response(api_handler, api_handler.get_pokemon(view_list))
+                                except Exception:
+                                    clear()
+                                    team_controller.team_data = current_team.team_save(team_controller.team_data)
+                                    team_controller.save_all_teams()
+                                    connection_error()
+
                                 clear()
                                 new_pokemon.view_pokemon(current_team.name, team_choice)
                                 confirm_pokemon: str = new_pokemon.confirm_pokemon()
@@ -168,10 +193,18 @@ def main(mode: str, message: str = "") -> None:
                                     # Move selection screen
                                     clear()
                                     current_move.view_move_list(current_pokemon.name, current_pokemon.move_list, current_pokemon.move_set)
-                                    search_move: str = current_move.select_move(api_handler)
+                                    try:
+                                        search_move: str = current_move.select_move(api_handler)
+                                    except Exception:
+                                        clear()
+                                        team_controller.team_data = current_team.team_save(team_controller.team_data)
+                                        team_controller.save_all_teams()
+                                        connection_error()
 
                                     # New move view screen to confirm selection
+                                    # Highly unlikely for a connection issue to occur here if there was no error in the try/except block above
                                     new_move: Move = Move.from_response(api_handler.get_move(search_move))
+
                                     clear()
                                     new_move.view_move(current_team.name, pokemon_choice, current_pokemon.name)
                                     confirm_move: str = new_move.confirm_move()

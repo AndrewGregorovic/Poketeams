@@ -19,16 +19,19 @@ class TestDataClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Create the /json directory before running any tests"""
+        """Create the /json directory and move team_data.json out of folder before running any tests"""
         try:
             os.mkdir(project_path + "/json")
         except FileExistsError:
-            pass
+            if os.path.exists(project_path + "/json/team_data.json"):
+                shutil.move(project_path + "/json/team_data.json", project_path + "/team_data.json")
 
     @classmethod
     def tearDownClass(cls):
-        """Delete the test_data.json file after running all tests"""
+        """Delete the test_data.json file and move team_data.json back into /json after running all tests"""
         os.remove(project_path + "/json/test_data.json")
+        if os.path.exists(project_path + "/team_data.json"):
+            shutil.move(project_path + "/team_data.json", project_path + "/json/team_data.json")
 
     def tearDown(self):
         """After every test write nothing to test_data.json"""

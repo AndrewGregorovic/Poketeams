@@ -1,5 +1,7 @@
 # Pokéteams
 
+![Pokéteams main menu screenshot](docs/t2a3_app_screenshot.png)
+
 A Pokémon team builder terminal application that pulls pokémon related data from the awesome PokéAPI hosted at [pokeapi.co](https://pokeapi.co). Pokéteams will help you build the ultimate pokémon teams when you're unable to play the games but are at a computer and have access to a terminal.
 
 - Create as many teams as you'd like so that you're never unprepared for a fight.
@@ -7,7 +9,9 @@ A Pokémon team builder terminal application that pulls pokémon related data fr
 - Save teams for later viewing or to continue building if you're interrupted in the middle of creating a new team.
 - Delete teams that you no longer need/want.
 
-All the saved team information is stored in a single json file called `team_data.json` and is all you need to transfer between computers to take your saved teams with you (both computers need Pokéteams installed to load the data and display it for easy viewing). Even if you don't have an internet connection, you'll still be able to load up and view previously saved teams!
+All the saved team information is stored in a single json file called `team_data.json` and is all you need to transfer between computers to take your saved teams with you (both computers need Pokéteams installed to load the data and display it for easy viewing).
+
+Even if you don't have an internet connection, you'll still be able to load up and view previously saved teams!
 
 ## Table of Contents
 - [Requirements](#requirements)
@@ -83,8 +87,9 @@ The following modules have been directly imported and used by the Pokéteams app
 Python standard libraries
 - `json`: Used to deserialize and serialize data between python data types and json. It is used alongside the requests module to retrieve data from PokéAPI and to save/load team data for persistence between application sessions.
 - `os`: Used to perform terminal commands within python code for the application to function as intended.
-- `shutil`: Used to delete the `src/json/` directory for testing purposes.
+- `shutil`: Used to delete the `src/json/` directory  for testing purposes, and move `team_data.json` in and out of the `/json` directory to avoid being deleted by the tests.
 - `sys`: Used to check for the presence of the `--help` option when starting the application and to insert the `src/` directory into the system path variable to aid in importing source code into the unit testing files.
+- `time`: Used for a sleep timer to provide enough time for users to read the error messages when a connection error occurs, before the application exits.
 - `typing`: Used to create Union objects for type hinting variables that can contain multiple data types.
 - `unittest`: Used for automated and manual testing to check that certain functions within the source code are working correctly.
 
