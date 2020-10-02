@@ -1,7 +1,9 @@
 import json
 
 from PyInquirer import prompt, Separator  # type: ignore
+import requests
 
+from apihandler import APIHandler
 from move import Move
 
 
@@ -19,61 +21,77 @@ class Pokemon():
         self.move_set: list = move_set
 
     @classmethod
-    def from_json(cls, data):
-        moves = list(map(Move.from_json, data["move_set"]))
+    def from_json(cls, data: dict) -> "Pokemon":
+        """Passes each move dictionary to Move.from_json() to create a Move class and then returns a Pokemon class"""
+        moves: list = list(map(Move.from_json, data["move_set"]))
         return cls(data["id"], data["name"], data["types"], data["weight"],
                    data["height"], data["abilities"], data["move_list"], moves)
 
     @classmethod
-    def from_response(cls, api_handler, response):
-        api_data = json.loads(response.text)
-        id = api_data["id"]
-        name = api_data["name"].capitalize()
-        types = tuple([type["type"]["name"].capitalize() for type in api_data["types"]])
-        weight = api_data["weight"]
-        height = api_data["height"]
-        abilities = {}
+    def from_response(cls, api_handler: APIHandler, response: requests.models.Response) -> "Pokemon":
+        """Pulls the desired information out of the api response and fetches additional data for abilities
+        Then returns a Pokemon class using all the relevant api data and a default empty move set"""
+        api_data: dict = json.loads(response.text)
+        id: int = api_data["id"]
+        name: str = api_data["name"].capitalize()
+        types: tuple = tuple([type["type"]["name"].capitalize() for type in api_data["types"]])
+        weight: int = api_data["weight"]
+        height: int = api_data["height"]
+
+        abilities: dict = {}
         for ability in api_data["abilities"]:
-            r = json.loads(api_handler.get_ability(ability["ability"]["name"]).text)
+            r: dict = json.loads(api_handler.get_ability(ability["ability"]["name"]).text)
             for effect_entry in r["effect_entries"]:
                 if effect_entry["language"]["name"] == "en":
                     abilities[ability["ability"]["name"].capitalize()] = effect_entry["effect"].replace("\n", " ").replace("  ", " ")
-        move_list = [move["move"]["name"].capitalize() for move in api_data["moves"]]
-        default_move = ["None", "None", "None", "None", "None", "None", "None"]
+
+        move_list: list = [move["move"]["name"].capitalize() for move in api_data["moves"]]
+
+        default_move: list = ["None", 0, 0, 0, ("None",), 0, "None"]
         if len(move_list) < 4:
-            move_set = [Move(*default_move) for i in range(len(move_list))]
+            move_set: list = [Move(*default_move) for i in range(len(move_list))]
         else:
             move_set = [Move(*default_move) for i in range(4)]
+
         return cls(id, name, types, weight, height, abilities, move_list, move_set)
 
-    def view_pokemon(self, team_name, team_choice):
-        print(f"Team: {team_name}")
-        print(f"Slot #{int(team_choice)}\n\n")
-        print(f"Name: {self.name}")
-        print(f"Pokedex ID: {self.id}\n")
-        print(f"Height: {self.height} decimetres")
-        print(f"Weight: {self.weight} hectograms\n")
+    def view_pokemon(self, team_name: str, team_choice: str) -> None:
+        """Displays all the saved information about the current Pokemon object"""
+        print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {team_name} \u001b[0m")
+        print(f"\u001b[4mSlot #{int(team_choice)}\u001b[0m\n\n")
+        print(f"\u001b[1mName\u001b[0m: {self.name}")
+        print(f"\u001b[1mPokedex ID:\u001b[0m {self.id}\n")
+        print(f"\u001b[1mHeight\u001b[0m: {self.height} decimetres")
+        print(f"\u001b[1mWeight\u001b[0m: {self.weight} hectograms\n")
+
         if len(self.types) == 2:
-            print(f"Types: {self.types[0]}")
+            print(f"\u001b[1mTypes\u001b[0m: {self.types[0]}")
             print(f"       {self.types[1]}")
         else:
-            print(f"Type: {self.types[0]}")
+            print(f"\u001b[1mType\u001b[0m: {self.types[0]}")
+
         print("")
-        print("Abilities:")
-        for ability in self.abilities:
-            # need to do api calls to pull ability effect info
-            print(f"  - {ability}:")
-            print(f"      {self.abilities[ability]}")
+        print("\u001b[1mAbilities\u001b[0m:")
+        if len(self.abilities) > 0:
+            for ability in self.abilities:
+                print(f"  - \u001b[4m{ability}\u001b[0m:")
+                print(f"      {self.abilities[ability]}")
+        else:
+            print("    This Pokemon has no abilities.")
+
         print("")
-        print("Current Move Set:")
-        print(f"  - {self.move_set[0].name}")
-        print(f"  - {self.move_set[1].name}")
-        print(f"  - {self.move_set[2].name}")
-        print(f"  - {self.move_set[3].name}")
+        print("\u001b[1mCurrent Move Set\u001b[0m:")
+        if len(self.move_set) > 0:
+            for move in self.move_set:
+                print(f"  - {move.name}")
+        else:
+            print("    This Pokemon cannot learn any moves.")
+
         print("\n")
 
-    def get_pokemon_options(self, mode):
-        options = [
+    def get_pokemon_options(self, mode: str) -> list:
+        """Determines which options are shown and enabled depending on app mode and if the move set is empty"""
+        options: list = [
             "Change Pokémon",
             None,
             "Back to team view"
@@ -97,8 +115,9 @@ class Pokemon():
 
             return options[1:]
 
-    def pokemon_menu(self, mode):
-        pokemon_options = [
+    def pokemon_menu(self, mode: str) -> str:
+        """Displays the menu options when viewing Pokemon information"""
+        pokemon_options: list = [
             {
                 "type": "list",
                 "name": "pokemon_menu",
@@ -107,47 +126,40 @@ class Pokemon():
             }
         ]
 
-        pokemon_option = prompt(pokemon_options)["pokemon_menu"]
+        while True:
+            pokemon_option: str = prompt(pokemon_options)["pokemon_menu"]
+            if pokemon_option not in pokemon_options[0]["choices"]:
+                print("Can't select a disabled option, please try again.\n")
+            else:
+                break
 
         if pokemon_option == "Change moves" or pokemon_option == "View moves":
-            select_pokemon_move = [
+            select_pokemon_move: list = [
                 {
                     "type": "list",
                     "name": "select_pokemon_move",
                     "message": "Which move slot would you like to select?",
                     "choices": [
-                        "Slot 1 - " + (self.move_set[0].name
-                                       if self.move_set[0].name != "None"
-                                       else "Empty"),
-                        "Slot 2 - " + (self.move_set[1].name
-                                       if self.move_set[1].name != "None"
-                                       else "Empty"),
-                        "Slot 3 - " + (self.move_set[2].name
-                                       if self.move_set[2].name != "None"
-                                       else "Empty"),
-                        "Slot 4 - " + (self.move_set[3].name
-                                       if self.move_set[3].name != "None"
-                                       else "Empty")
+                        "Slot 1 - " + (self.move_set[0].name if self.move_set[0].name != "None" else "Empty"),
+                        "Slot 2 - " + (self.move_set[1].name if self.move_set[1].name != "None" else "Empty"),
+                        "Slot 3 - " + (self.move_set[2].name if self.move_set[2].name != "None" else "Empty"),
+                        "Slot 4 - " + (self.move_set[3].name if self.move_set[3].name != "None" else "Empty")
                     ]
                 }
             ]
 
-            return int(
-                prompt(select_pokemon_move)["select_pokemon_move"][5]) - 1
+            return prompt(select_pokemon_move)["select_pokemon_move"][5]
         else:
             return pokemon_option
 
-    def select_pokemon(self, api_handler):
-        print("\nIf you are unsure of what Pokémon you would like to search "
-              "for, select a Pokémon generation to view the list of Pokémon "
-              "from that generation.\n\nOnce you know what Pokémon you would "
-              "like to search for, select the Search option and enter the "
-              "Pokémon's name or pokedex number. If the Pokémon you are "
-              "searching for has different forms, enter the Pokémon's name "
-              "followed by -<form> where <form> is the Pokémon's form you "
-              "are interested in, some generation lists will show examples."
-              "\n")
-        select_pokemon_options = [
+    @staticmethod
+    def select_pokemon(api_handler: APIHandler) -> str:
+        """Displays the screen for selecting a pokemon list to view and searching for a pokemon using the api"""
+        print("\nIf you are unsure of what Pokémon you would like to search for, select a Pokémon generation to view the list of Pokémon "
+              "from that generation.\n\nOnce you know what Pokémon you would like to search for, select the Search option and enter the "
+              "Pokémon's name or pokedex number. If the Pokémon you are searching for has different forms, enter the Pokémon's name "
+              "followed by -<form> where <form> is the Pokémon's form you are interested in, some generation lists will show examples.\n")
+        select_pokemon_options: list = [
             {
                 "type": "list",
                 "name": "select_pokemon_option",
@@ -168,26 +180,29 @@ class Pokemon():
             }
         ]
 
-        selection = prompt(select_pokemon_options)["select_pokemon_option"]
+        selection: str = prompt(select_pokemon_options)["select_pokemon_option"]
 
         if selection == "Search":
-            search_pokemon = [
+            search_pokemon: list = [
                 {
                     "type": "input",
                     "name": "search_pokemon",
                     "message": "What is the name or Pokédex # you would like to search for?",
-                    "validate": lambda val: api_handler.get_pokemon(val).status_code != 404 or "Pokémon not found, please check you have input the correct name/number"
+                    "validate": lambda val: api_handler.get_pokemon(val.lower().strip(" ")).status_code != 404 or  # noqa: W504
+                    "Pokémon not found, please check you have input the correct name/number"
                 }
             ]
 
-            return prompt(search_pokemon)["search_pokemon"]
+            return prompt(search_pokemon)["search_pokemon"].lower().strip(" ")
 
         else:
             return selection
 
-    def view_pokemon_list(self, view_list, number, response):
-        api_data = json.loads(response.text)
-        pokemon_list = []
+    @staticmethod
+    def view_pokemon_list(view_list: str, number: int, response: requests.models.Response) -> None:
+        """Displays the list of pokemon requested by the user in 5 even width columns"""
+        api_data: dict = json.loads(response.text)
+        pokemon_list: list = []
         for result in api_data["results"]:
             pokemon_list.append(f" #{number} {result['name'].capitalize()} ")
             number += 1
@@ -195,12 +210,14 @@ class Pokemon():
         while len(pokemon_list) % 5 != 0:
             pokemon_list.append("")
 
-        print(f"{view_list} Pokémon:\n")
+        print(f"\u001b[1m\u001b[4m{view_list} Pokémon\u001b[0m:\n")
         for a, b, c, d, e in zip(pokemon_list[::5], pokemon_list[1::5], pokemon_list[2::5], pokemon_list[3::5], pokemon_list[4::5]):
             print("{:<27}{:<27}{:<27}{:<27}{:<27}".format(a, b, c, d, e))
 
-    def confirm_pokemon(self):
-        confirm_pokemon = [
+    @staticmethod
+    def confirm_pokemon() -> str:
+        """Displays a little confirmation menu to confirm adding the pokemon to the current team"""
+        confirm_pokemon: list = [
             {
                 "type": "list",
                 "name": "confirm_pokemon",

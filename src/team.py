@@ -17,13 +17,16 @@ class Team():
 
     def view_team(self) -> None:
         """Display the team overview"""
-        print(f"\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {self.name} \u001b[0m\n")
+        print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {self.name} \u001b[0m\n")
 
         for i in range(6):
             print(f"\u001b[4mPokémon {i + 1}\u001b[0m:\n")
             if self.pokemon_list[i]:
                 print(f"    \u001b[1mName\u001b[0m: {self.pokemon_list[i].name}\n")
-                print(f"    \u001b[1mCurrent Move Set\u001b[0m: {', '.join([move.name for move in self.pokemon_list[i].move_set]).strip(', ')}\n")
+                if len(self.pokemon_list[i].move_set) > 0:
+                    print(f"    \u001b[1mCurrent Move Set\u001b[0m: {', '.join([move.name for move in self.pokemon_list[i].move_set]).strip(', ')}\n")
+                else:
+                    print("    \u001b[1mCurrent Move Set\u001b[0m: This Pokemon cannot learn any moves.\n")
             else:
                 print("    Empty\n")
 

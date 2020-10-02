@@ -151,7 +151,7 @@ def main(mode: str, message: str = "") -> None:
                         break
                     else:
                         pass
-                        # current_move = current_pokemon.move_set[pokemon_choice]
+                        # current_move = current_pokemon.move_set[int(pokemon_choice) - 1]
                         # current_move.view_move()
                         # move_choice =  current_move.move_menu()
                         # if move_choice = "Change move":
@@ -164,7 +164,7 @@ def main(mode: str, message: str = "") -> None:
                         #         confirm_move = new_move.confirm_move()
                         #         if confirm_move is True:
                         #             current_move = new_move
-                        #             current_pokemon.move_set[pokemon_choice] = new_move
+                        #             current_pokemon.move_set[int(pokemon_choice) - 1] = new_move
                         #             break
 
 

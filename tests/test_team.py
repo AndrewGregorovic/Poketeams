@@ -27,7 +27,7 @@ class TestTeamClass(unittest.TestCase):
             test_team.name
             test_team.pokemon_list
         except Exception as e:
-            self.assertTrue(False, e, "Error occured during instantiation or while calling attributes!")
+            self.assertTrue(False, e)
 
     def test_get_team_options(self):
         """Test Team.get_team_options()"""
