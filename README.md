@@ -102,6 +102,8 @@ Python standard libraries
 
 While it's not a dependency, this application also uses `flake8` to check that the source code is following the PEP8 style guide. As PEP8 is only a set of guidelines, the source code doesn't follow them religiously. In particular E501 which recommends that lines are no longer than 79 characters would in my opinion cause certain sections of code to be less readable and cause issues with trying to follow other points in the style guide so it is ignored.
 
+> There are other modules listed in requirements.txt that will be installed when setting up the Python environment for this app however I have not explicitly imported them into the source code of this application and as such I have not included them in the above list.
+
 ## Implementation Plan
 
 For development of this application I have chosen to use the Projects section of the Pokéteams github repository to track development progress. Previously I have used Trello however as this app is being developed on my local machine with commits being pushed directly to github, it made sense to use githubs provided Projects section rather than Trello in this case. Some screenshots of the project board during development are linked below with many more included in this repository inside the `docs/` directory.
