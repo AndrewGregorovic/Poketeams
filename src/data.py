@@ -96,7 +96,10 @@ class Data():
         """Get user input for the team name"""
         current_name_list = [team.name for team in self.team_data] + [""]
         if current_team:
-            current_name_list.remove(current_team.name)
+            try:
+                current_name_list.remove(current_team.name)
+            except ValueError:
+                pass
 
         new_team_name: list = [
             {

@@ -107,13 +107,41 @@ class Pokemon():
             return options
 
         else:
+            empty_move_set: bool = True
+            for move in self.move_set:
+                if move.name != "None":
+                    empty_move_set = False
+
             if self.name == "None":
                 options[1] = {"name": "View moves",
                               "disabled": "Cannot view moves on an empty pokémon slot"}
+            elif empty_move_set:
+                options[1] = {"name": "View moves",
+                              "disabled": "This Pokémon does not have any moves saved"}
             else:
                 options[1] = "View moves"
 
             return options[1:]
+
+    def get_pokemon_move_slots_options(self, mode: str) -> list:
+
+        if mode == "online":
+            pokemon_move_slots = [
+                "Slot 1 - " + (self.move_set[0].name if self.move_set[0].name != "None" else "Empty"),
+                "Slot 2 - " + (self.move_set[1].name if self.move_set[1].name != "None" else "Empty"),
+                "Slot 3 - " + (self.move_set[2].name if self.move_set[2].name != "None" else "Empty"),
+                "Slot 4 - " + (self.move_set[3].name if self.move_set[3].name != "None" else "Empty")
+            ]
+        else:
+            pokemon_move_slots = []
+            for i in range(len(self.move_set)):
+                if self.move_set[i].name != "None":
+                    pokemon_move_slots.append(f"Slot {i + 1} - {self.move_set[i].name}")
+                else:
+                    pokemon_move_slots.append({"name": f"Slot {i + 1} - Empty",
+                                               "disabled": "There is no move saved to this slot"})
+
+        return pokemon_move_slots
 
     def pokemon_menu(self, mode: str) -> str:
         """Displays the menu options when viewing Pokemon information"""
@@ -139,12 +167,7 @@ class Pokemon():
                     "type": "list",
                     "name": "select_pokemon_move",
                     "message": "Which move slot would you like to select?",
-                    "choices": [
-                        "Slot 1 - " + (self.move_set[0].name if self.move_set[0].name != "None" else "Empty"),
-                        "Slot 2 - " + (self.move_set[1].name if self.move_set[1].name != "None" else "Empty"),
-                        "Slot 3 - " + (self.move_set[2].name if self.move_set[2].name != "None" else "Empty"),
-                        "Slot 4 - " + (self.move_set[3].name if self.move_set[3].name != "None" else "Empty")
-                    ]
+                    "choices": self.get_pokemon_move_slots_options(mode)
                 }
             ]
 

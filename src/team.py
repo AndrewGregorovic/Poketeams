@@ -56,6 +56,28 @@ class Team():
 
         return options
 
+    def get_team_slot_options(self, mode: str) -> list:
+
+        if mode == "online":
+            team_slots = [
+                "Slot 1 - " + (self.pokemon_list[0].name if self.pokemon_list[0].name != "None" else "Empty"),
+                "Slot 2 - " + (self.pokemon_list[1].name if self.pokemon_list[1].name != "None" else "Empty"),
+                "Slot 3 - " + (self.pokemon_list[2].name if self.pokemon_list[2].name != "None" else "Empty"),
+                "Slot 4 - " + (self.pokemon_list[3].name if self.pokemon_list[3].name != "None" else "Empty"),
+                "Slot 5 - " + (self.pokemon_list[4].name if self.pokemon_list[4].name != "None" else "Empty"),
+                "Slot 6 - " + (self.pokemon_list[5].name if self.pokemon_list[5].name != "None" else "Empty")
+            ]
+        else:
+            team_slots = []
+            for i in range(6):
+                if self.pokemon_list[i].name != "None":
+                    team_slots.append(f"Slot {i + 1} - {(self.pokemon_list[i].name)}")
+                else:
+                    team_slots.append({"name": f"Slot {i + 1} - Empty",
+                                       "disabled": "There is no Pokémon saved to this slot"})
+
+        return team_slots
+
     def team_menu(self, mode: str) -> str:
         """Displays the menu options for team view"""
         team_options: list = [
@@ -80,14 +102,7 @@ class Team():
                     "type": "list",
                     "name": "select_team_pokemon",
                     "message": "Which Pokémon slot would you like to select?",
-                    "choices": [
-                        "Slot 1 - " + (self.pokemon_list[0].name if self.pokemon_list[0].name != "None" else "Empty"),
-                        "Slot 2 - " + (self.pokemon_list[1].name if self.pokemon_list[1].name != "None" else "Empty"),
-                        "Slot 3 - " + (self.pokemon_list[2].name if self.pokemon_list[2].name != "None" else "Empty"),
-                        "Slot 4 - " + (self.pokemon_list[3].name if self.pokemon_list[3].name != "None" else "Empty"),
-                        "Slot 5 - " + (self.pokemon_list[4].name if self.pokemon_list[4].name != "None" else "Empty"),
-                        "Slot 6 - " + (self.pokemon_list[5].name if self.pokemon_list[5].name != "None" else "Empty")
-                    ]
+                    "choices": self.get_team_slot_options(mode)
                 }
             ]
 

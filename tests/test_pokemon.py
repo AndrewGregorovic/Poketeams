@@ -50,4 +50,4 @@ class TestPokemonClass(unittest.TestCase):
         self.assertEqual(test_options[1], "Change moves", "Change moves option isn't enabled on an occupied pokemon slot!")
 
         test_options = test_pokemon.get_pokemon_options("offline")
-        self.assertEqual(test_options[0], "View moves", "View moves option isn't correctly named or enabled on an empty pokemon slot when offline!")
+        self.assertIsInstance(test_options[0], dict, "View moves option isn't correctly disabled on an occupied pokemon slot with an empty move set when offline!")
