@@ -26,11 +26,11 @@ class Team():
                 if len(self.pokemon_list[i].move_set) > 0:
                     print(f"    \u001b[1mCurrent Move Set\u001b[0m: {', '.join([move.name for move in self.pokemon_list[i].move_set]).strip(', ')}\n")
                 else:
-                    print("    \u001b[1mCurrent Move Set\u001b[0m: This Pokemon cannot learn any moves.\n")
+                    print("    \u001b[1mCurrent Move Set\u001b[0m: This Pokémon cannot learn any moves.\n")
             else:
                 print("    Empty\n")
 
-        print()
+        print("")
 
     def get_team_menu_options(self, mode: str) -> list:
         """Determines which options are shown and enabled depending on app mode and if the team is empty"""

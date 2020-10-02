@@ -14,7 +14,7 @@ class Data():
     def __init__(self, name: str) -> None:
 
         self.current_team: Union[None, Team] = None
-        self.default_move: list = ["None", 0, 0, 0, ("None",), 0, "None"]
+        self.default_move: list = ["None", 0, 0, 0, "None", 0, "None"]
         self.default_pokemon: list = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
                                       [Move(*self.default_move), Move(*self.default_move), Move(*self.default_move), Move(*self.default_move)]]
         self.default_pokemon_list: list = [Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon),

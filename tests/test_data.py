@@ -66,7 +66,7 @@ class TestDataClass(unittest.TestCase):
         """Tests Data.convert_to_objects, Team.from_json, Pokemon.from_json, Move.from_json methods
         All need to be called and function correctly in order to properly load the saved json data"""
 
-        default_move = ["None", 0, 0, 0, ("None",), 0, "None"]
+        default_move = ["None", 0, 0, 0, "None", 0, "None"]
         default_pokemon = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
                            [Move(*default_move), Move(*default_move), Move(*default_move), Move(*default_move)]]
         default_pokemon_list = [Pokemon(*default_pokemon), Pokemon(*default_pokemon), Pokemon(*default_pokemon),

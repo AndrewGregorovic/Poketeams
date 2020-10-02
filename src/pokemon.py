@@ -47,7 +47,7 @@ class Pokemon():
 
         move_list: list = [move["move"]["name"].capitalize() for move in api_data["moves"]]
 
-        default_move: list = ["None", 0, 0, 0, ("None",), 0, "None"]
+        default_move: list = ["None", 0, 0, 0, "None", 0, "None"]
         if len(move_list) < 4:
             move_set: list = [Move(*default_move) for i in range(len(move_list))]
         else:
@@ -60,7 +60,7 @@ class Pokemon():
         print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {team_name} \u001b[0m")
         print(f"\u001b[4mSlot #{int(team_choice)}\u001b[0m\n\n")
         print(f"\u001b[1mName\u001b[0m: {self.name}")
-        print(f"\u001b[1mPokedex ID:\u001b[0m {self.id}\n")
+        print(f"\u001b[1mPokédex ID:\u001b[0m {self.id}\n")
         print(f"\u001b[1mHeight\u001b[0m: {self.height} decimetres")
         print(f"\u001b[1mWeight\u001b[0m: {self.weight} hectograms\n")
 
@@ -77,7 +77,7 @@ class Pokemon():
                 print(f"  - \u001b[4m{ability}\u001b[0m:")
                 print(f"      {self.abilities[ability]}")
         else:
-            print("    This Pokemon has no abilities.")
+            print("    This Pokémon has no abilities.")
 
         print("")
         print("\u001b[1mCurrent Move Set\u001b[0m:")
@@ -85,7 +85,7 @@ class Pokemon():
             for move in self.move_set:
                 print(f"  - {move.name}")
         else:
-            print("    This Pokemon cannot learn any moves.")
+            print("    This Pokémon cannot learn any moves.")
 
         print("\n")
 
@@ -100,7 +100,7 @@ class Pokemon():
         if mode == "online":
             if self.name == "None":
                 options[1] = {"name": "Change moves",
-                              "disabled": "Cannot change moves on an empty pokemon slot"}
+                              "disabled": "Cannot change moves on an empty pokémon slot"}
             else:
                 options[1] = "Change moves"
 
@@ -109,7 +109,7 @@ class Pokemon():
         else:
             if self.name == "None":
                 options[1] = {"name": "View moves",
-                              "disabled": "Cannot view moves on an empty pokemon slot"}
+                              "disabled": "Cannot view moves on an empty pokémon slot"}
             else:
                 options[1] = "View moves"
 
@@ -121,7 +121,7 @@ class Pokemon():
             {
                 "type": "list",
                 "name": "pokemon_menu",
-                "message": "What would you like to do with this pokemon slot?",
+                "message": "What would you like to do with this pokémon slot?",
                 "choices": self.get_pokemon_options(mode)
             }
         ]
@@ -154,10 +154,10 @@ class Pokemon():
 
     @staticmethod
     def select_pokemon(api_handler: APIHandler) -> str:
-        """Displays the screen for selecting a pokemon list to view and searching for a pokemon using the api"""
+        """Displays the screen for selecting a Pokémon list to view and searching for a Pokémon using the api"""
         print("\nIf you are unsure of what Pokémon you would like to search for, select a Pokémon generation to view the list of Pokémon "
               "from that generation.\n\nOnce you know what Pokémon you would like to search for, select the Search option and enter the "
-              "Pokémon's name or pokedex number. If the Pokémon you are searching for has different forms, enter the Pokémon's name "
+              "Pokémon's name or Pokédex number. If the Pokémon you are searching for has different forms, enter the Pokémon's name "
               "followed by -<form> where <form> is the Pokémon's form you are interested in, some generation lists will show examples.\n")
         select_pokemon_options: list = [
             {

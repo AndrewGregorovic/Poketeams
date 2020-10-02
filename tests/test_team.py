@@ -14,7 +14,7 @@ class TestTeamClass(unittest.TestCase):
 
     def setUp(self):
         """Set defaults for creating test Team objects"""
-        self.default_move = ["None", 0, 0, 0, ("None",), 0, "None"]
+        self.default_move = ["None", 0, 0, 0, "None", 0, "None"]
         self.default_pokemon = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
                                 [Move(*self.default_move), Move(*self.default_move), Move(*self.default_move), Move(*self.default_move)]]
         self.default_pokemon_list = [Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon),

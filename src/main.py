@@ -10,6 +10,7 @@ import requests_cache  # type: ignore
 
 from apihandler import APIHandler
 from data import Data
+from move import Move
 from pokemon import Pokemon
 from team import Team
 
@@ -98,8 +99,7 @@ def main(mode: str, message: str = "") -> None:
                     # View pokemon screen
                     clear()
 
-                    # Only view information if there is an actual pokemon here
-                    # otherwise skip to pokemon search/selection
+                    # Only view information if there is an actual pokemon here otherwise skip to pokemon search/selection
                     if current_pokemon.name != "None":
                         current_pokemon.view_pokemon(current_team.name, team_choice)
                         pokemon_choice: str = current_pokemon.pokemon_menu(mode)
@@ -150,22 +150,39 @@ def main(mode: str, message: str = "") -> None:
                     elif pokemon_choice == "Back to team view":
                         break
                     else:
-                        pass
-                        # current_move = current_pokemon.move_set[int(pokemon_choice) - 1]
-                        # current_move.view_move()
-                        # move_choice =  current_move.move_menu()
-                        # if move_choice = "Change move":
-                        #     while True:
-                        #         current_pokemon.view_move_list()
-                        #         search_move = current_move.select_move()
-                        #         r = apihandler.get_move(search_move)
-                        #         new_move = Move(respone data)
-                        #         new_move.view_move()
-                        #         confirm_move = new_move.confirm_move()
-                        #         if confirm_move is True:
-                        #             current_move = new_move
-                        #             current_pokemon.move_set[int(pokemon_choice) - 1] = new_move
-                        #             break
+                        current_move = current_pokemon.move_set[int(pokemon_choice) - 1]
+
+                        while True:
+                            # View move screen
+                            clear()
+
+                            # Only view information if there is a saved move here otherwise skip to move selection
+                            if current_move.name != "None":
+                                current_move.view_move(current_team.name, pokemon_choice, current_pokemon.name)
+                                move_choice: str = current_move.move_menu(mode)
+                            else:
+                                move_choice = "Change move"
+
+                            if move_choice == "Change move":
+                                while True:
+                                    # Move selection screen
+                                    clear()
+                                    current_move.view_move_list(current_pokemon.name, current_pokemon.move_list, current_pokemon.move_set)
+                                    search_move: str = current_move.select_move(api_handler)
+
+                                    # New move view screen to confirm selection
+                                    new_move: Move = Move.from_response(api_handler.get_move(search_move))
+                                    clear()
+                                    new_move.view_move(current_team.name, pokemon_choice, current_pokemon.name)
+                                    confirm_move: str = new_move.confirm_move()
+
+                                    if confirm_move == "Add move":
+                                        current_move = new_move
+                                        current_pokemon.move_set[int(pokemon_choice) - 1] = new_move
+                                        break
+
+                            if move_choice == "Back to Pokémon view":
+                                break
 
 
 if __name__ == "__main__":
@@ -174,8 +191,7 @@ if __name__ == "__main__":
             clear()
             print(f.read())
     else:
-        # Check that we can connect to the api
-        # and start the app in the respective mode
+        # Check that we can connect to the api and start the app in the respective mode
         try:
             api_check: int = requests.get("https://pokeapi.co/api/v2/").status_code
 
