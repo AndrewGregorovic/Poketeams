@@ -112,3 +112,5 @@ For development of this application I have chosen to use the Projects section of
 ![Pokéteams project management screenshot 6](docs/t2a3_project_management_6.png)
 ![Pokéteams project management screenshot 12](docs/t2a3_project_management_12.png)
 ![Pokéteams project management screenshot 18](docs/t2a3_project_management_18.png)
+![Pokéteams project management screenshot 24](docs/t2a3_project_management_24.png)
+![Pokéteams project management screenshot 27](docs/t2a3_project_management_27.png)
