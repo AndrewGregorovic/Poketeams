@@ -10,8 +10,56 @@ from team import Team
 
 
 class Data():
+    """
+    A class to control the team data that the application works with
+
+    Attributes:
+    name: str
+        Name of the controller, either "main" for normal use or "test" for running the unittest module
+    current_team: Union[None, Team]
+        The current Team object or None if there isn't a team assigned yet
+    default_move: list
+        List of default move data required to create a Move object
+    default_pokemon: list
+        List of default pokemon data required to create a Pokemon object
+    default_pokemon_list: list
+        List of default team data required to create a Team object
+
+    Methods:
+    convert_to_objects(json_data: list)
+        Converts the loaded json data into appropriate class objects for the application to use
+
+    get_main_menu_options(self, mode: str)
+        Gets the options to use in Data.main_menu_select()
+
+    main_menu_select(self, mode: str)
+        Displays the main menu
+
+    new_team_name(self, current_team)
+        Gets a new team name to create a new Team object or
+        update the name attribute of the currently selected Team
+
+    select_saved_team(self)
+        Displays the input field for the user to select a saved team
+
+    load_saved_team(self)
+        Loads the team selected by the user in Data.select_saved_team()
+
+    delete_saved_team(self)
+        Deletes the team selected by the user in Data.select_saved_team()
+
+    save_all_teams(self)
+        Writes the contents of the team_data attribute to a .json file
+    """
 
     def __init__(self, name: str) -> None:
+        """
+        Sets the required attributes for the Team object
+
+        Parameters:
+        name: str
+            Name of the controller, either "main" for normal use or "test" for running the unittest module
+        """
 
         self.current_team: Union[None, Team] = None
         self.default_move: list = ["None", 0, 0, 0, "None", 0, "None"]
@@ -40,7 +88,17 @@ class Data():
 
     @staticmethod
     def convert_to_objects(json_data: list) -> list:
-        """Passes each set of team data to the Team.from_json() class method to create the Team class"""
+        """
+        Converts the loaded json data into appropriate class objects for the application to use
+
+        Parameters:
+        json_data: list
+            The json data loaded from the .json file
+
+        Returns:
+        List containing the various class objects required by the application
+        """
+
         converted_data: list = []
         for team in json_data:
             converted_data.append(Team.from_json(team))
@@ -48,7 +106,17 @@ class Data():
         return converted_data
 
     def get_main_menu_options(self, mode: str) -> list:
-        """Determine which main menu options should be present and enabled"""
+        """
+        Gets the options to use in Data.main_menu_select()
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        List of menu options to display in Data.main_menu_select()
+        """
+
         options: list = [
             "Create a new team",
             None,
@@ -72,7 +140,17 @@ class Data():
             return options[1:]
 
     def main_menu_select(self, mode: str) -> str:
-        """Display the main menu options"""
+        """
+        Displays the main menu
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        String of the user's input from the PyInquirer prompt
+        """
+
         main_menu_options: list = [
             {
                 "type": "list",
@@ -92,8 +170,19 @@ class Data():
 
         return main_menu_option
 
-    def new_team_name(self, current_team) -> str:
-        """Get user input for the team name"""
+    def new_team_name(self, current_team: Union[None, Team]) -> str:
+        """
+        Gets a new team name to create a new Team object or
+        update the name attribute of the currently selected Team
+
+        Parameters:
+        current_team: Union[None, Team]
+            The Team object saved to current_team or None
+
+        Returns:
+        Team name string input by the user into the PyInquirer prompt
+        """
+
         current_name_list = [team.name for team in self.team_data] + [""]
         if current_team:
             try:
@@ -115,7 +204,13 @@ class Data():
         return prompt(new_team_name)["new_team_name"]
 
     def select_saved_team(self) -> str:
-        """Get user's selection for which team to load or delete"""
+        """
+        Displays the input field for the user to select a saved team
+
+        Returns:
+        String of the user's input from the PyInquirer prompt
+        """
+
         saved_team_choice: list = [
             {
                 "type": "list",
@@ -128,7 +223,13 @@ class Data():
         return prompt(saved_team_choice)["saved_team_choice"]
 
     def load_saved_team(self) -> None:
-        """Load selected team"""
+        """
+        Loads the team selected by the user in Data.select_saved_team()
+
+        Returns:
+        None
+        """
+
         selected_team: str = self.select_saved_team()
 
         for team in self.team_data:
@@ -136,7 +237,13 @@ class Data():
                 self.current_team = team
 
     def delete_saved_team(self) -> str:
-        """Delete selected team"""
+        """
+        Deletes the team selected by the user in Data.select_saved_team()
+
+        Returns:
+        None
+        """
+
         selected_team: str = self.select_saved_team()
 
         for team in self.team_data:
@@ -147,7 +254,13 @@ class Data():
         return f"{selected_team} has been deleted."
 
     def save_all_teams(self) -> tuple:
-        """Write the team data to .json file after converting it to json"""
+        """
+        Writes the contents of the team_data attribute to a .json file
+
+        Returns:
+        Tuple containing a bool value of whether saving was successful and if unsuccessful, the error
+        """
+
         try:
             if self.team_data != []:
                 json_team_data = json.dumps(self.team_data, default=lambda o: o.__dict__)

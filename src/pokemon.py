@@ -8,9 +8,80 @@ from move import Move
 
 
 class Pokemon():
+    """
+    A class to represent a Pokemon
+
+    Attributes:
+    id: int
+        Pokedex ID of the pokemon
+    name: str
+        Name of the pokemon
+    types: tuple
+        The type(s) that the pokemon belongs to
+    weight: int
+        The weight of the pokemon in hectograms
+    height: int
+        The height of the pokemon in decimetres
+    abilities: dict
+        The abilities of the pokemon
+    move_list: list
+        The list of moves the pokemon is able to learn
+    move_set: list
+        The list of moves the pokemon has learnt as Move objects
+
+    Methods:
+    from_json(cls, data: dict)
+        Creates a Pokemon object from a json dictionary
+
+    from_response(cls, api_handler: APIHandler, response: requests.models.Response)
+        Creates a Pokemon object from a Response object
+
+    view_pokemon(self, team_name: str, team_choice: str)
+        Displays the Pokemon object's information
+
+    get_pokemon_options(self, mode: str)
+        Gets the options to use in Pokemon.pokemon_menu()
+
+    get_pokemon_move_slots_options(self, mode: str)
+        Gets the move slot options to use in Pokemon.pokemon_menu()
+
+    pokemon_menu(self, mode: str)
+        Displays the menu for the Pokemon screen
+
+    select_pokemon(api_handler: APIHandler)
+        Displays the input field for the user to select and view a pokemon list or search for a pokemon
+
+    view_pokemon_list(view_list: str, number: int, response: requests.models.Response)
+        Displays the list of pokemon from the generation given by the user's input
+
+    confirm_pokemon()
+        Get confirmation to add the pokemon to the currently selected pokemon slot
+    """
 
     def __init__(self, id: int, name: str, types: tuple, weight: int, height: int,
                  abilities: dict, move_list: list, move_set: list) -> None:
+        """
+        Sets the required attributes for the Pokemon object
+
+        Parameters:
+        id: int
+        Pokedex ID of the pokemon
+        name: str
+            Name of the pokemon
+        types: tuple
+            The type(s) that the pokemon belongs to
+        weight: int
+            The weight of the pokemon in hectograms
+        height: int
+            The height of the pokemon in decimetres
+        abilities: dict
+            The abilities of the pokemon
+        move_list: list
+            The list of moves the pokemon is able to learn
+        move_set: list
+            The list of moves the pokemon has learnt as Move objects
+        """
+
         self.id: int = id
         self.name: str = name
         self.types: tuple = types
@@ -22,15 +93,37 @@ class Pokemon():
 
     @classmethod
     def from_json(cls, data: dict) -> "Pokemon":
-        """Passes each move dictionary to Move.from_json() to create a Move class and then returns a Pokemon class"""
+        """
+        Creates a Pokemon object from a json dictionary
+
+        Parameters:
+        data: dict
+            Dictionary containing attribute, value pairs from the applications saved json data
+
+        Returns:
+        Pokemon object
+        """
+
         moves: list = list(map(Move.from_json, data["move_set"]))
         return cls(data["id"], data["name"], data["types"], data["weight"],
                    data["height"], data["abilities"], data["move_list"], moves)
 
     @classmethod
     def from_response(cls, api_handler: APIHandler, response: requests.models.Response) -> "Pokemon":
-        """Pulls the desired information out of the api response and fetches additional data for abilities
-        Then returns a Pokemon class using all the relevant api data and a default empty move set"""
+        """
+        Creates a Pokemon object from a Response object,
+        additional api calls are required to fetch ability effect information
+
+        Parameters:
+        api_handler: APIHandler
+            The APIHandler object used to make api calls
+        response: requests.models.Response
+            Response object from APIHandler.get_pokemon()
+
+        Returns:
+        Pokemon object
+        """
+
         api_data: dict = json.loads(response.text)
         id: int = api_data["id"]
         name: str = api_data["name"].capitalize()
@@ -56,7 +149,19 @@ class Pokemon():
         return cls(id, name, types, weight, height, abilities, move_list, move_set)
 
     def view_pokemon(self, team_name: str, team_choice: str) -> None:
-        """Displays all the saved information about the current Pokemon object"""
+        """
+        Displays the Pokemon object's information
+
+        Parameters:
+        team_name: str
+            The name attribute of the currently selected Team
+        team_choice: str
+            The team slot number of the currently selected Pokemon
+
+        Returns:
+        None
+        """
+
         print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {team_name} \u001b[0m")
         print(f"\u001b[4mSlot #{int(team_choice)}\u001b[0m\n\n")
         print(f"\u001b[1mName\u001b[0m: {self.name}")
@@ -90,7 +195,17 @@ class Pokemon():
         print("\n")
 
     def get_pokemon_options(self, mode: str) -> list:
-        """Determines which options are shown and enabled depending on app mode and if the move set is empty"""
+        """
+        Gets the options to use in Pokemon.pokemon_menu()
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        List of menu options to display in Pokemon.pokemon_menu()
+        """
+
         options: list = [
             "Change Pokémon",
             None,
@@ -124,6 +239,16 @@ class Pokemon():
             return options[1:]
 
     def get_pokemon_move_slots_options(self, mode: str) -> list:
+        """
+        Gets the move slot options to use in Pokemon.pokemon_menu()
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        List of move slot options to display in Pokemon.pokemon_menu()
+        """
 
         if mode == "online":
             pokemon_move_slots = [
@@ -144,7 +269,17 @@ class Pokemon():
         return pokemon_move_slots
 
     def pokemon_menu(self, mode: str) -> str:
-        """Displays the menu options when viewing Pokemon information"""
+        """
+        Displays the menu for the Pokemon screen
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        String of the user's input from the PyInquirer prompts
+        """
+
         pokemon_options: list = [
             {
                 "type": "list",
@@ -177,7 +312,17 @@ class Pokemon():
 
     @staticmethod
     def select_pokemon(api_handler: APIHandler) -> str:
-        """Displays the screen for selecting a Pokémon list to view and searching for a Pokémon using the api"""
+        """
+        Displays the input field for the user to select and view a pokemon list or search for a pokemon
+
+        Parameters:
+        api_handler: APIHandler
+            The APIHandler object used to make api calls
+
+        Returns:
+        String of the users input from the PyInquirer prompts
+        """
+
         print("\nIf you are unsure of what Pokémon you would like to search for, select a Pokémon generation to view the list of Pokémon "
               "from that generation.\n\nOnce you know what Pokémon you would like to search for, select the Search option and enter the "
               "Pokémon's name or Pokédex number. If the Pokémon you are searching for has different forms, enter the Pokémon's name "
@@ -223,7 +368,21 @@ class Pokemon():
 
     @staticmethod
     def view_pokemon_list(view_list: str, number: int, response: requests.models.Response) -> None:
-        """Displays the list of pokemon requested by the user in 5 even width columns"""
+        """
+        Displays the list of pokemon from the generation given by the user's input
+
+        Parameters:
+        view_list: str
+            The user's input string from Pokemon.pokemon_menu()
+        number: int
+            The Pokedex number of the first pokemon in this generational list
+        response: requests.models.Response
+            Response object from APIHandler.get_pokemon() using a query string
+
+        Returns:
+        None
+        """
+
         api_data: dict = json.loads(response.text)
         pokemon_list: list = []
         for result in api_data["results"]:
@@ -239,7 +398,13 @@ class Pokemon():
 
     @staticmethod
     def confirm_pokemon() -> str:
-        """Displays a little confirmation menu to confirm adding the pokemon to the current team"""
+        """
+        Get confirmation to add the pokemon to the currently selected pokemon slot
+
+        Returns:
+        String of the users input from the PyInquirer prompt
+        """
+
         confirm_pokemon: list = [
             {
                 "type": "list",

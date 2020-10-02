@@ -13,7 +13,10 @@ from team import Team  # noqa: E402
 class TestTeamClass(unittest.TestCase):
 
     def setUp(self):
-        """Set defaults for creating test Team objects"""
+        """
+        Set defaults for creating test Team objects
+        """
+
         self.default_move = ["None", 0, 0, 0, "None", 0, "None"]
         self.default_pokemon = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
                                 [Move(*self.default_move), Move(*self.default_move), Move(*self.default_move), Move(*self.default_move)]]
@@ -21,7 +24,10 @@ class TestTeamClass(unittest.TestCase):
                                      Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon), Pokemon(*self.default_pokemon)]
 
     def test_init(self):
-        """Test instantiation"""
+        """
+        Test instantiation
+        """
+
         try:
             test_team = Team("test team", self.default_pokemon_list)
             test_team.name
@@ -30,7 +36,10 @@ class TestTeamClass(unittest.TestCase):
             self.assertTrue(False, e)
 
     def test_get_team_options(self):
-        """Test Team.get_team_options()"""
+        """
+        Test Team.get_team_options()
+        """
+
         test_team = Team("test options", self.default_pokemon_list)
 
         test_options = test_team.get_team_menu_options("online")
@@ -48,7 +57,10 @@ class TestTeamClass(unittest.TestCase):
         self.assertEqual(test_options[0], "View Pokémon", "The first option is not correctly named for offline mode!")
 
     def test_team_save(self):
-        """Test Team.team_save()"""
+        """
+        Test Team.team_save()
+        """
+
         test_team_data = [Team("test team 1", self.default_pokemon_list),
                           Team("test team 2", self.default_pokemon_list)]
         default_pokemon = [0, "Test pokemon", ("None",), 0, 0, {"None": "None"}, [],

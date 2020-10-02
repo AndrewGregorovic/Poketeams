@@ -19,7 +19,10 @@ class TestDataClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Create the /json directory and move team_data.json out of folder before running any tests"""
+        """
+        Create the /json directory and move team_data.json out of folder before running any tests
+        """
+
         try:
             os.mkdir(project_path + "/json")
         except FileExistsError:
@@ -28,19 +31,28 @@ class TestDataClass(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Delete the test_data.json file and move team_data.json back into /json after running all tests"""
+        """
+        Delete the test_data.json file and move team_data.json back into /json after running all tests
+        """
+
         os.remove(project_path + "/json/test_data.json")
         if os.path.exists(project_path + "/team_data.json"):
             shutil.move(project_path + "/team_data.json", project_path + "/json/team_data.json")
 
     def tearDown(self):
-        """After every test write nothing to test_data.json"""
+        """
+        After every test write nothing to test_data.json
+        """
+
         if os.path.exists(project_path + "/json"):
             with open(project_path + "/json/test_data.json", "w"):
                 pass
 
     def test_init_no_json_directory(self):
-        """Test Data() creates the /json directory"""
+        """
+        Test Data() creates the /json directory
+        """
+
         if os.path.exists(project_path + "/json"):
             shutil.rmtree(project_path + "/json")
 
@@ -48,7 +60,10 @@ class TestDataClass(unittest.TestCase):
         self.assertTrue(os.path.exists(project_path + "/json"), f"json directory not found in {project_path}!")
 
     def test_init_no_json_file(self):
-        """Test team_data attribute when there's no json file"""
+        """
+        Test team_data attribute when there's no json file
+        """
+
         try:
             os.remove(project_path + "/json/test_data.json")
         except Exception:
@@ -58,7 +73,10 @@ class TestDataClass(unittest.TestCase):
         self.assertEqual(test_data_class.team_data, [], "team_data attribute has not been set to []!")
 
     def test_init_invalid_json(self):
-        """Test team_data attribute when there's invalid json"""
+        """
+        Test team_data attribute when there's invalid json
+        """
+
         with open(project_path + "/json/test_data.json", "w") as f:
             f.write("invalid json data")
 
@@ -66,8 +84,10 @@ class TestDataClass(unittest.TestCase):
         self.assertEqual(test_data_class.team_data, [], "team_data attribute has not been set to []!")
 
     def test_init_load_json(self):
-        """Tests Data.convert_to_objects, Team.from_json, Pokemon.from_json, Move.from_json methods
-        All need to be called and function correctly in order to properly load the saved json data"""
+        """
+        Tests Data.convert_to_objects, Team.from_json, Pokemon.from_json, Move.from_json methods
+        All need to be called and function correctly in order to properly load the saved json data
+        """
 
         default_move = ["None", 0, 0, 0, "None", 0, "None"]
         default_pokemon = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
@@ -87,7 +107,10 @@ class TestDataClass(unittest.TestCase):
         self.assertIsInstance(test_data_class.team_data[0].pokemon_list[0].move_set[0], Move, "first element in Pokemon object's move_set is not a Move object!")
 
     def test_get_main_menu_options(self):
-        """Test Data.get_main_menu_options()"""
+        """
+        Test Data.get_main_menu_options()
+        """
+
         test_data_class = Data("test")
 
         test_data_class.team_data = []
@@ -111,7 +134,10 @@ class TestDataClass(unittest.TestCase):
         self.assertIsInstance(test_options[1], str, "Delete a saved team option (offline) is not a str!")
 
     def test_current_team_after_load(self):
-        """Test Data.load_saved_team()"""
+        """
+        Test Data.load_saved_team()
+        """
+
         test_data_class = Data("test")
         test_data_class.team_data = [Team("test team 1", test_data_class.default_pokemon_list),
                                      Team("test team 2", test_data_class.default_pokemon_list)]
@@ -120,7 +146,10 @@ class TestDataClass(unittest.TestCase):
         self.assertEqual(test_data_class.team_data[1], test_data_class.current_team, "test team 2 was not set to the current team attribute!")
 
     def test_delete_team_from_team_data(self):
-        """Test Data.delete_saved_team()"""
+        """
+        Test Data.delete_saved_team()
+        """
+
         test_data_class = Data("test")
         test_data_class.team_data = [Team("test team 1", test_data_class.default_pokemon_list),
                                      Team("test team 2", test_data_class.default_pokemon_list)]
@@ -132,7 +161,10 @@ class TestDataClass(unittest.TestCase):
         self.assertIsNone(test_data_class.current_team)
 
     def test_save_no_team_data(self):
-        """Test saving when there's no team data"""
+        """
+        Test saving when there's no team data
+        """
+
         test_data_class = Data("test")
         test_data_class.team_data = []
         test_data_class.save_all_teams()
@@ -140,7 +172,10 @@ class TestDataClass(unittest.TestCase):
             self.assertEqual(f.read(), "", "json file is not empty even though there's no team data!")
 
     def test_save_team_data(self):
-        """Test that team data is saved correctly"""
+        """
+        Test that team data is saved correctly
+        """
+
         test_data_class = Data("test")
         test_data_class.team_data = [Team("test team", test_data_class.default_pokemon_list)]
         test_data_class.save_all_teams()

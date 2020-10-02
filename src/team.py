@@ -4,19 +4,73 @@ from pokemon import Pokemon
 
 
 class Team():
+    """
+    A class to represent a pokemon team
+
+    Attributes:
+    name: str
+        Name of the pokemon team
+    pokemon_list: list
+        The list of Pokemon objects that make up the team
+
+    Methods:
+    from_json(cls, data: dict)
+        Creates a Team object from a json dictionary
+
+    view_team(self)
+        Displays the Team object's information
+
+    get_team_menu_options(self, mode: str)
+        Gets the options to use in Team.team_menu()
+
+    get_team_slot_options(self, mode: str)
+        Gets the team slot options to use in Team.team_menu()
+
+    team_menu(self, mode: str)
+        Displays the menu for the Team screen
+
+    team_save(self, team_data: list)
+        Updates the Data class' team_data attribute with the current teams data
+    """
 
     def __init__(self, name: str, pokemon_list: list) -> None:
+        """
+        Sets the required attributes for the Team object
+
+        Parameters:
+        name: str
+            Name of the pokemon team
+        pokemon_list: list
+            The list of Pokemon objects that make up the team
+        """
+
         self.name: str = name
         self.pokemon_list: list = pokemon_list
 
     @classmethod
     def from_json(cls, data: dict) -> "Team":
-        """Passes each pokémon dictionary to Pokemon.from_json() to create a Pokemon class and then returns a Team class"""
+        """
+        Creates a Team object from a json dictionary
+
+        Parameters:
+        data: dict
+            Dictionary containing attribute, value pairs from the applications saved json data
+
+        Returns:
+        Team object
+        """
+
         pokemon: list = list(map(Pokemon.from_json, data["pokemon_list"]))
         return cls(data["name"], pokemon)
 
     def view_team(self) -> None:
-        """Display the team overview"""
+        """
+        Displays the Team object's information
+
+        Returns:
+        None
+        """
+
         print(f"\n\u001b[1m\u001b[4mTeam\u001b[0m: \u001b[7m {self.name} \u001b[0m\n")
 
         for i in range(6):
@@ -33,7 +87,17 @@ class Team():
         print("")
 
     def get_team_menu_options(self, mode: str) -> list:
-        """Determines which options are shown and enabled depending on app mode and if the team is empty"""
+        """
+        Gets the options to use in Team.team_menu()
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        List of menu options to display in Team.team_menu()
+        """
+
         options: list = [
             None,
             "Rename team",
@@ -57,6 +121,16 @@ class Team():
         return options
 
     def get_team_slot_options(self, mode: str) -> list:
+        """
+        Gets the team slot options to use in Team.team_menu()
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        List of pokemon slot options to display in Team.team_menu()
+        """
 
         if mode == "online":
             team_slots = [
@@ -79,7 +153,17 @@ class Team():
         return team_slots
 
     def team_menu(self, mode: str) -> str:
-        """Displays the menu options for team view"""
+        """
+        Displays the menu for the Team screen
+
+        Parameters:
+        mode: str
+            The currently running mode of the application
+
+        Returns:
+        String of the user's input from the PyInquirer prompts
+        """
+
         team_options: list = [
             {
                 "type": "list",
@@ -111,7 +195,17 @@ class Team():
             return team_option
 
     def team_save(self, team_data: list) -> list:
-        """Saves the current team to the Data.team_data attribute"""
+        """
+        Updates the Data class' team_data attribute with the current teams data
+
+        Parameters:
+        team_data: list
+            The Data class' team_data attribute with all team data loaded from json and from current session
+
+        Returns:
+        Updated list of team data to be reassigned to the Data class' team_data attribute
+        """
+
         team_names: list = [team.name for team in team_data]
         if self.name in team_names:
             i: int = team_names.index(self.name)

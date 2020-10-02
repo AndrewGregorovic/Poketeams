@@ -11,11 +11,17 @@ from move import Move  # noqa: E402
 class TestMoveClass(unittest.TestCase):
 
     def setUp(self):
-        """Set defaults for creating test Move objects"""
+        """
+        Set defaults for creating test Move objects
+        """
+
         self.default_move = ["None", 0, 0, 0, "None", 0, "None"]
 
     def test_init(self):
-        """Test instantiation"""
+        """
+        Test instantiation
+        """
+
         try:
             test_move = Move(*self.default_move)
             test_move.name
@@ -29,7 +35,10 @@ class TestMoveClass(unittest.TestCase):
             self.assertTrue(False, e)
 
     def test_get_move_options(self):
-        """Test Move.get_move_options()"""
+        """
+        Test Move.get_move_options()
+        """
+
         test_move = Move(*self.default_move)
         test_options = test_move.get_move_options("online")
         self.assertIsInstance(test_options, list, "test options are not being returned as a list of options!")

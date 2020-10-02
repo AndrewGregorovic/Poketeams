@@ -12,14 +12,20 @@ from pokemon import Pokemon  # noqa: E402
 class TestPokemonClass(unittest.TestCase):
 
     def setUp(self):
-        """Set defaults for creating test Team objects"""
+        """
+        Set defaults for creating test Team objects
+        """
+
         self.default_move = ["None", 0, 0, 0, "None", 0, "None"]
         self.default_pokemon = [0, "None", ("None",), 0, 0, {"None": "None"}, [],
                                 [Move(*self.default_move), Move(*self.default_move),
                                  Move(*self.default_move), Move(*self.default_move)]]
 
     def test_init(self):
-        """Test instantiation"""
+        """
+        Test instantiation
+        """
+
         try:
             test_pokemon = Pokemon(*self.default_pokemon)
             test_pokemon.id
@@ -34,7 +40,10 @@ class TestPokemonClass(unittest.TestCase):
             self.assertTrue(False, e)
 
     def test_get_pokemon_options(self):
-        """Test Pokemon.get_pokemon_options()"""
+        """
+        Test Pokemon.get_pokemon_options()
+        """
+
         test_pokemon = Pokemon(*self.default_pokemon)
         test_options = test_pokemon.get_pokemon_options("online")
         self.assertIsInstance(test_options[1], dict, "Change moves option isn't disabled on an empty pokemon slot!")

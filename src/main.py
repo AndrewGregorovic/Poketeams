@@ -17,7 +17,13 @@ from team import Team
 
 
 def clear() -> None:
-    """Clear screen utility function for both linux and windows"""
+    """
+    Clear screen utility function for both linux and windows
+
+    Returns:
+    None
+    """
+
     if os.name == "nt":
         command = "cls"
     else:
@@ -27,7 +33,13 @@ def clear() -> None:
 
 
 def connection_error() -> None:
-    """Print error messages and exit the application"""
+    """
+    Print error messages and exit the application
+
+    Returns:
+    None
+    """
+
     print("\n\n\n\u001b[7m !!! Pokéteams has encountered a connection issue !!! \u001b[0m\n\n")
     print("\u001b[1mYour current team data has been saved, please restart the app to continue from where you were interrupted.\u001b[0m")
     time.sleep(5)
@@ -38,9 +50,17 @@ def connection_error() -> None:
 def main(mode: str, message: str = "") -> None:
     """
     Main application function
-    mode ("online" or "offline"), the mode that the application is currently running in
-    message, the appropriate error message if there is a connection issue
+
+    Parameters:
+    mode: str
+        The mode that the application is currently running in, either "online" or "offline"
+    message: str, optional, default = ""
+        The appropriate error message if there is a connection issue
+
+    Returns:
+    None
     """
+
     deleted: str = ""
 
     while True:
