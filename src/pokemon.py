@@ -306,7 +306,14 @@ class Pokemon():
                 }
             ]
 
-            return prompt(select_pokemon_move)["select_pokemon_move"][5]
+            while True:
+                pokemon_move_option: str = prompt(select_pokemon_move)["select_pokemon_move"]
+                if pokemon_move_option not in select_pokemon_move[0]["choices"]:
+                    print("Can't select a disabled option, please try again.\n")
+                else:
+                    break
+
+            return pokemon_move_option[5]
         else:
             return pokemon_option
 

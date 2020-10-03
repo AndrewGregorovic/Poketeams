@@ -248,7 +248,7 @@ if __name__ == "__main__":
         try:
             api_check: int = requests.get("https://pokeapi.co/api/v2/").status_code
 
-            if api_check == 200:
+            if api_check != 200:
                 requests_cache.install_cache('pokeapi_cache')
                 api_handler: APIHandler = APIHandler()
                 main("online")

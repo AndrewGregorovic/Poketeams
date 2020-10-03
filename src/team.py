@@ -190,7 +190,14 @@ class Team():
                 }
             ]
 
-            return prompt(select_team_pokemon)["select_team_pokemon"][5]
+            while True:
+                team__slot_option: str = prompt(select_team_pokemon)["select_team_pokemon"]
+                if team__slot_option not in select_team_pokemon[0]["choices"]:
+                    print("Can't select a disabled option, please try again.\n")
+                else:
+                    break
+
+            return team__slot_option[5]
         else:
             return team_option
 
